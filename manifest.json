@@ -1,0 +1,8 @@
+{
+  "name": "ZealAI",
+  "short_name": "ZealAI",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}
