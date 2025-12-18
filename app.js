@@ -10,7 +10,7 @@ async function send() {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer YOUR_API_KEY_HERE"
+      "Authorization": "xeNUwoZ7GQHXwRjEVB3AA7FMS7BMAwpA"
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
