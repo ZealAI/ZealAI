@@ -1,12 +1,15 @@
 async function send() {
-  const text = document.getElementById("msg").value;
+  const message = document.getElementById("msg").value;
 
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: text })
-  });
+  const res = await fetch(
+    "https://zeal-ai.zeal-ai-app.workers.dev/",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    }
+  );
 
   const data = await res.json();
-  document.getElementById("reply").textContent = data.reply || "No reply";
+  document.getElementById("out").textContent = data.reply;
 }
