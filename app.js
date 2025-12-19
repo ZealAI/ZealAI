@@ -1,50 +1,51 @@
-const form = document.getElementById("chat-form");
-const input = document.getElementById("user-input");
-const chatBox = document.getElementById("chat-box");
-
-// ⚠️ REPLACE WITH YOUR WORKER URL
-const WORKER_URL = "https://zeal-ai.zeal-ai-app.workers.dev/";
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const userMessage = input.value.trim();
-  if (!userMessage) return;
-
-  // Show user message
-  addMessage("You", userMessage);
-  input.value = "";
-
-  try {
-    const response = await fetch(WORKER_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: userMessage
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error("Server error");
+export default {
+  async fetch(request, env) {
+    if (request.method !== "POST") {
+      return new Response("ZEAL.AI Worker Running", { status: 200 });
     }
 
-    const data = await response.json();
+    try {
+      const body = await request.json();
+      const userMessage = body.message;
 
-    // Show ZEAL.AI reply
-    addMessage("ZEAL.AI", data.reply || "No reply received");
+      const mistralResponse = await fetch(
+        "https://api.mistral.ai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${env.MISTRAL_API_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "mistral-small",
+            messages: [
+              {
+                role: "system",
+                content: "You are ZEAL.AI, a Bible-based assistant."
+              },
+              {
+                role: "user",
+                content: userMessage
+              }
+            ]
+          })
+        }
+      );
 
-  } catch (err) {
-    addMessage("ZEAL.AI", "Error connecting to ZEAL.AI Worker");
-    console.error(err);
+      const data = await mistralResponse.json();
+
+      return new Response(
+        JSON.stringify({
+          reply: data.choices[0].message.content
+        }),
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+    } catch (err) {
+      return new Response(
+        JSON.stringify({ error: err.toString() }),
+        { status: 500 }
+      );
+    }
   }
-});
-
-function addMessage(sender, text) {
-  const msg = document.createElement("div");
-  msg.className = sender === "You" ? "user-msg" : "ai-msg";
-  msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+};
