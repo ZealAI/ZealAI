@@ -7,7 +7,7 @@ sendBtn.onclick = async () => {
   if (!message) return;
 
   responseBox.textContent = "Thinking...";
-
+  
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
       method: "POST",
