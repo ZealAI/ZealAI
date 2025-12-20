@@ -2,60 +2,48 @@ const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
 
-// CHAT MEMORY (FRONTEND)
 let messages = [];
 
 sendBtn.onclick = async () => {
-  const userMessage = input.value.trim();
-  if (!userMessage) return;
+  const userText = input.value.trim();
+  if (!userText) return;
 
-  // Save user message
-  messages.push({ role: "user", content: userMessage });
+  // save user message
+  messages.push({ role: "user", content: userText });
 
-  // Render chat
-  renderChat();
-
+  // render chat
+  renderMessages();
   input.value = "";
 
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: messages   // SEND FULL CHAT
-      })
+      body: JSON.stringify({ messages }) // 🔥 THIS WAS THE FIX
     });
 
     const data = await res.json();
 
-    // Save assistant reply
-    messages.push({
-      role: "assistant",
-      content: data.reply || "No response."
-    });
-
-    renderChat();
+    if (data.reply) {
+      messages.push({ role: "assistant", content: data.reply });
+      renderMessages();
+    } else {
+      messages.push({ role: "assistant", content: "⚠️ No reply from ZEAL.AI" });
+      renderMessages();
+    }
 
   } catch (err) {
-    messages.push({
-      role: "assistant",
-      content: "Error connecting to ZEAL.AI"
-    });
-    renderChat();
+    messages.push({ role: "assistant", content: "❌ Error connecting to ZEAL.AI" });
+    renderMessages();
   }
 };
 
-// RENDER CHAT FUNCTION
-function renderChat() {
+function renderMessages() {
   responseBox.innerHTML = "";
-
   messages.forEach(msg => {
     const div = document.createElement("div");
     div.className = msg.role;
     div.textContent = msg.content;
     responseBox.appendChild(div);
   });
-
-  responseBox.scrollTop = responseBox.scrollHeight;
 }
-
