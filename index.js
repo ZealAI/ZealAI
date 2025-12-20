@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env) {
-    // Allow browser + frontend requests
+    // CORS
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
@@ -14,7 +14,6 @@ export default {
     // Health check
     if (request.method !== "POST") {
       return new Response("ZEAL.AI Worker Running 🚀", {
-        status: 200,
         headers: {
           "Content-Type": "text/plain",
           "Access-Control-Allow-Origin": "*",
@@ -23,11 +22,11 @@ export default {
     }
 
     try {
-      const { message } = await request.json();
+      const { messages } = await request.json();
 
-      if (!message) {
+      if (!Array.isArray(messages)) {
         return new Response(
-          JSON.stringify({ error: "No message provided" }),
+          JSON.stringify({ error: "messages must be an array" }),
           {
             status: 400,
             headers: {
@@ -38,7 +37,6 @@ export default {
         );
       }
 
-      // 🔑 API KEY COMES FROM CLOUD SECRETS
       const apiKey = env.MISTRAL_API_KEY;
 
       const mistralResponse = await fetch(
@@ -51,7 +49,7 @@ export default {
           },
           body: JSON.stringify({
             model: "mistral-small-latest",
-            messages: [{ role: "user", content: message }],
+            messages: messages,
           }),
         }
       );
@@ -60,10 +58,9 @@ export default {
 
       return new Response(
         JSON.stringify({
-          reply: data.choices?.[0]?.message?.content || "No reply",
+          reply: data.choices?.[0]?.message?.content ?? "No reply",
         }),
         {
-          status: 200,
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
@@ -84,4 +81,3 @@ export default {
     }
   },
 };
-
