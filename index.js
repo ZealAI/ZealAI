@@ -23,9 +23,9 @@ export default {
     }
 
     try {
-      const { messages } = await request.json();
+      const { message } = await request.json();
 
-      if (!messages) {
+      if (!message) {
         return new Response(
           JSON.stringify({ error: "No message provided" }),
           {
@@ -51,7 +51,7 @@ export default {
           },
           body: JSON.stringify({
             model: "mistral-small-latest",
-            messages: [{ role: "user", content: messages }],
+            messages: [{ role: "user", content: message }],
           }),
         }
       );
@@ -60,7 +60,7 @@ export default {
 
       return new Response(
         JSON.stringify({
-          reply: data.choices?.[0]?.messages?.content || "No reply",
+          reply: data.choices?.[0]?.message?.content || "No reply",
         }),
         {
           status: 200,
@@ -72,7 +72,7 @@ export default {
       );
     } catch (err) {
       return new Response(
-        JSON.stringify({ error: err.messages }),
+        JSON.stringify({ error: err.message }),
         {
           status: 500,
           headers: {
