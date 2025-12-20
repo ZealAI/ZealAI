@@ -2,22 +2,60 @@ const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
 
-sendBtn.onclick = async () => {
-  const message = input.value.trim();
-  if (!message) return;
+// CHAT MEMORY (FRONTEND)
+let messages = [];
 
-  responseBox.textContent = "Thinking...";
-  
+sendBtn.onclick = async () => {
+  const userMessage = input.value.trim();
+  if (!userMessage) return;
+
+  // Save user message
+  messages.push({ role: "user", content: userMessage });
+
+  // Render chat
+  renderChat();
+
+  input.value = "";
+
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message })
+      body: JSON.stringify({
+        messages: messages   // SEND FULL CHAT
+      })
     });
 
     const data = await res.json();
-    responseBox.textContent = data.reply || "No response.";
+
+    // Save assistant reply
+    messages.push({
+      role: "assistant",
+      content: data.reply || "No response."
+    });
+
+    renderChat();
+
   } catch (err) {
-    responseBox.textContent = "Error connecting to ZEAL.AI";
+    messages.push({
+      role: "assistant",
+      content: "Error connecting to ZEAL.AI"
+    });
+    renderChat();
   }
 };
+
+// RENDER CHAT FUNCTION
+function renderChat() {
+  responseBox.innerHTML = "";
+
+  messages.forEach(msg => {
+    const div = document.createElement("div");
+    div.className = msg.role;
+    div.textContent = msg.content;
+    responseBox.appendChild(div);
+  });
+
+  responseBox.scrollTop = responseBox.scrollHeight;
+}
+
