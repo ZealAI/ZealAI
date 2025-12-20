@@ -4,14 +4,14 @@ body: JSON.stringify({
   messages: messages
 })
 messages.push({ role: "assistant", content: data.reply });
-chatBox.innerHTML = "";
+//chatBox.innerHTML = "";
 
-messages.forEach(msg => {
-  const div = document.createElement("div");
-  div.className = msg.role;
-  div.textContent = msg.content;
-  chatBox.appendChild(div);
-});
+//messages.forEach(msg => {
+ // const div = document.createElement("div");
+ // div.className = msg.role;
+ // div.textContent = msg.content;
+//  chatBox.appendChild(div);
+//});
 
 
 const sendBtn = document.getElementById("send");
