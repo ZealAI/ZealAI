@@ -17,9 +17,13 @@ body {
   padding: 24px;
   border-radius: 16px;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;     /* WIDER */
+  height: 70vh;         /* TALLER */
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
+
 
 h1 {
   margin: 0;
@@ -63,5 +67,8 @@ button:hover {
   padding: 12px;
   background: rgba(255,255,255,0.1);
   border-radius: 10px;
-  min-height: 40px;
+  flex: 1;                    /* EXPANDS */
+  overflow-y: auto;           /* SCROLL */
+  white-space: pre-wrap;
 }
+
