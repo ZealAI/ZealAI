@@ -49,7 +49,19 @@ export default {
           },
           body: JSON.stringify({
             model: "mistral-small-latest",
-            messages: messages,
+            messages: [
+  {
+    role: "system",
+    content: `
+  You are ZEAL.AI — a Bible-based spiritual guide.
+  You respond with wisdom, clarity, scripture-backed guidance,
+  gentle encouragement, and moral grounding.
+  You are calm, insightful, non-judgmental, and faith-centered.
+  `
+  },
+  ...messages
+],
+
           }),
         }
       );
