@@ -5,45 +5,30 @@ const responseBox = document.getElementById("response");
 let messages = [];
 
 sendBtn.onclick = async () => {
-  const userText = input.value.trim();
-  if (!userText) return;
+  const text = input.value.trim();
+  if (!text) return;
 
-  // save user message
-  messages.push({ role: "user", content: userText });
-
-  // render chat
-  renderMessages();
-  input.value = "";
+  messages.push({ role: "user", content: text });
+  responseBox.textContent = "Thinking…";
 
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages }) // 🔥 THIS WAS THE FIX
+      body: JSON.stringify({ messages }),
     });
 
     const data = await res.json();
 
     if (data.reply) {
       messages.push({ role: "assistant", content: data.reply });
-      renderMessages();
+      responseBox.textContent = data.reply;
     } else {
-      messages.push({ role: "assistant", content: "⚠️ No reply from ZEAL.AI" });
-      renderMessages();
+      responseBox.textContent = "No reply";
     }
 
+    input.value = "";
   } catch (err) {
-    messages.push({ role: "assistant", content: "❌ Error connecting to ZEAL.AI" });
-    renderMessages();
+    responseBox.textContent = "Error connecting to ZEAL.AI";
   }
 };
-
-function renderMessages() {
-  responseBox.innerHTML = "";
-  messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = msg.role;
-    div.textContent = msg.content;
-    responseBox.appendChild(div);
-  });
-}
