@@ -114,15 +114,18 @@ button {
 /* Responsive tweaks */
 @media (max-width: 480px) {
   .app {
-    max-width: 95%;
+    max-width: 100%;
+    height: 100vh;    /* full height */
+    border-radius: 0;
     padding: 16px;
   }
 
   textarea {
-    height: 80px;
+    height: 90px;
   }
 
   #response {
     min-height: 200px;
+    max-height: none;
   }
 }
