@@ -1,15 +1,38 @@
 const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
+const newChatBtn = document.getElementById("newChat");
 
-let messages = []; // 🧠 frontend memory
+/* 🧠 MEMORY (per chat session) */
+let messages = [
+  {
+    role: "system",
+    content: "You are ZEAL.AI, a Bible-guided assistant that responds with wisdom, clarity, and kindness."
+  }
+];
 
+/* RENDER */
+function renderMessages() {
+  responseBox.innerHTML = "";
+
+  messages.forEach(msg => {
+    if (msg.role === "system") return;
+
+    const div = document.createElement("div");
+    div.className = `message ${msg.role}`;
+    div.textContent = msg.content;
+    responseBox.appendChild(div);
+  });
+
+  responseBox.scrollTop = responseBox.scrollHeight;
+}
+
+/* SEND */
 sendBtn.onclick = async () => {
-  const userMessage = input.value.trim();
-  if (!userMessage) return;
+  const text = input.value.trim();
+  if (!text) return;
 
-  // save + render user message
-  messages.push({ role: "user", content: userMessage });
+  messages.push({ role: "user", content: text });
   renderMessages();
   input.value = "";
 
@@ -24,12 +47,12 @@ sendBtn.onclick = async () => {
 
     messages.push({
       role: "assistant",
-      content: data.reply || "No reply."
+      content: data.reply || "No response."
     });
 
     renderMessages();
 
-  } catch (err) {
+  } catch {
     messages.push({
       role: "assistant",
       content: "⚠️ Error connecting to ZEAL.AI"
@@ -38,15 +61,13 @@ sendBtn.onclick = async () => {
   }
 };
 
-function renderMessages() {
+/* NEW CHAT (RESET MEMORY) */
+newChatBtn.onclick = () => {
+  messages = [
+    {
+      role: "system",
+      content: "You are ZEAL.AI, a Bible-guided assistant that responds with wisdom, clarity, and kindness."
+    }
+  ];
   responseBox.innerHTML = "";
-
-  messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = `message ${msg.role}`; // 🔥 THIS WAS THE ISSUE
-    div.textContent = msg.content;
-    responseBox.appendChild(div);
-  });
-
-  responseBox.scrollTop = responseBox.scrollHeight;
-}
+};
