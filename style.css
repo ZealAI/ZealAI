@@ -36,20 +36,23 @@ h1 {
 
 .subtitle {
   text-align: center;
-  opacity: 0.75;
-  margin-bottom: 12px;
+  opacity: 0.8;
+  margin-bottom: 16px;
 }
 
 /* ===== CHAT AREA ===== */
 #response {
   flex: 1; /* 🔥 THIS MAKES IT EXPAND */
   background: rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 14px;
+  border-radius: 12px;
+  padding: 12px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 16px;
+  min-height: 250px;
+  max-height: 400px;
 }
 
 /* ===== CHAT BUBBLES ===== */
@@ -81,12 +84,11 @@ h1 {
 .input-area {
   display: flex;
   gap: 10px;
-  margin-top: 12px;
 }
 
 textarea {
-  flex: 1;
-  height: 70px;
+  width: 100%;
+  height: 100px;
   padding: 12px;
   border-radius: 12px;
   border: none;
@@ -96,7 +98,7 @@ textarea {
 }
 
 button {
-  width: 90px;
+  width: 100%;
   border-radius: 12px;
   border: none;
   background: #00ffd5;
@@ -108,6 +110,10 @@ button {
 
 button:hover {
   opacity: 0.9;
+}
+textarea,
+button {
+  flex-shrink: 0;
 }
 
 /* ===== MOBILE FIXES ===== */
