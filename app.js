@@ -1,25 +1,27 @@
 const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
-const newChatBtn = document.getElementById("newChat");
+const newChatBtn = document.getElementById("newChat"); // make a "New Chat" button in HTML
 
-/* 🧠 MEMORY (per chat session) */
-let messages = [
-  {
-    role: "system",
-    content: "You are ZEAL.AI, a Bible-guided assistant that responds with wisdom, clarity, and kindness."
-  }
-];
+// 🔥 Memory storage
+let chatSessions = [];
+let currentSession = 0; // index of current chat
 
-/* RENDER */
+// Initialize first session
+chatSessions.push([]);
+
+function addMessageToSession(text, role) {
+  chatSessions[currentSession].push({ role, content: text });
+  renderMessages();
+}
+
 function renderMessages() {
   responseBox.innerHTML = "";
+  const messages = chatSessions[currentSession];
 
   messages.forEach(msg => {
-    if (msg.role === "system") return;
-
     const div = document.createElement("div");
-    div.className = `message ${msg.role}`;
+    div.className = `message ${msg.role === "user" ? "user" : "ai"}`;
     div.textContent = msg.content;
     responseBox.appendChild(div);
   });
@@ -27,47 +29,32 @@ function renderMessages() {
   responseBox.scrollTop = responseBox.scrollHeight;
 }
 
-/* SEND */
 sendBtn.onclick = async () => {
-  const text = input.value.trim();
-  if (!text) return;
+  const userMessage = input.value.trim();
+  if (!userMessage) return;
 
-  messages.push({ role: "user", content: text });
-  renderMessages();
+  // Add user message
+  addMessageToSession(userMessage, "user");
   input.value = "";
 
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages })
+      body: JSON.stringify({ messages: chatSessions[currentSession] })
     });
 
     const data = await res.json();
+    addMessageToSession(data.reply || "No reply.", "ai");
 
-    messages.push({
-      role: "assistant",
-      content: data.reply || "No response."
-    });
-
-    renderMessages();
-
-  } catch {
-    messages.push({
-      role: "assistant",
-      content: "⚠️ Error connecting to ZEAL.AI"
-    });
-    renderMessages();
+  } catch (err) {
+    addMessageToSession("⚠️ Error connecting to ZEAL.AI", "ai");
   }
 };
 
-/* NEW CHAT (RESET MEMORY) */
+// 🔄 New Chat logic
 newChatBtn.onclick = () => {
-  messages = [
-    {
-      role: "system",
-      content: "You are ZEAL.AI, a Bible-guided assistant that responds with wisdom, clarity, and kindness."
-    }
-  ];
-  responseBox.innerHTML = "";
+  currentSession = chatSessions.length;
+  chatSessions.push([]); // start a fresh chat
+  renderMessages();
 };
