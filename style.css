@@ -37,16 +37,20 @@ h1 {
   margin-bottom: 16px;
 }
 
-
 #response {
-  flex: 1;                     /* EXPANDS */
-  margin-bottom: 16px;
+  margin-top: 16px;
   padding: 12px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;                  
-  overflow-y: auto;           /* SCROLL */
-  white-space: pre-wrap;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  min-height: 200px;
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+
+
 
 .input-area {
   display: flex;
