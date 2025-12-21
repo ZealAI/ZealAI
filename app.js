@@ -1,13 +1,13 @@
 const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
-function addMessage(text, role) {
-  const div = document.createElement("div");
-  div.className = `message ${role}`;
-  div.textContent = text;
-  response.appendChild(div);
-  response.scrollTop = response.scrollHeight;
-}
+//function addMessage(text, role) {
+//  const div = document.createElement("div");
+//  div.className = `message ${role}`;
+ // div.textContent = text;
+ // response.appendChild(div);
+//  response.scrollTop = response.scrollHeight;
+//}
 let messages = []; // 🔥 THIS IS THE MEMORY (frontend)
 
 sendBtn.onclick = async () => {
