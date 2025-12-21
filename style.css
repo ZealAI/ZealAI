@@ -18,7 +18,7 @@ body {
   border-radius: 16px;
   width: 100%;
   max-width: 520px;     /* WIDER */
-  height: 70vh;         /* TALLER */
+  height: 80vh;         /* TALLER */
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
@@ -35,6 +35,16 @@ h1 {
   text-align: center;
   opacity: 0.8;
   margin-bottom: 16px;
+}
+
+#response {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  flex: 1;                    /* EXPANDS */
+  overflow-y: auto;           /* SCROLL */
+  white-space: pre-wrap;
 }
 
 textarea {
@@ -62,15 +72,7 @@ button:hover {
   opacity: 0.9;
 }
 
-#response {
-  margin-top: 16px;
-  padding: 12px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
-  flex: 1;                    /* EXPANDS */
-  overflow-y: auto;           /* SCROLL */
-  white-space: pre-wrap;
-}
+
 
 textarea,
 button {
