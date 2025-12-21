@@ -1,30 +1,33 @@
 * {
   box-sizing: border-box;
-  font-family: system-ui, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* ===== BODY ===== */
 body {
+  margin: 0;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   color: white;
 }
 
+/* ===== APP CONTAINER ===== */
 .app {
-  background: rgba(0,0,0,0.45);
-  padding: 24px;
-  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.45);
   width: 100%;
-  max-width: 1000px;     /* WIDER */
-  height: 95vh;         /* TALLER */
+  max-width: 1000px;
+  height: 95vh;
+  padding: 20px;
+  border-radius: 18px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-
+/* ===== HEADER ===== */
 h1 {
   margin: 0;
   text-align: center;
@@ -33,44 +36,68 @@ h1 {
 
 .subtitle {
   text-align: center;
-  opacity: 0.8;
-  margin-bottom: 16px;
+  opacity: 0.75;
+  margin-bottom: 12px;
 }
 
+/* ===== CHAT AREA ===== */
 #response {
-  margin-top: 16px;
-  padding: 12px;
+  flex: 1; /* 🔥 THIS MAKES IT EXPAND */
   background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-  min-height: 250px;
-  max-height: 400px;
+  border-radius: 14px;
+  padding: 14px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+/* ===== CHAT BUBBLES ===== */
+.message {
+  max-width: 85%;
+  padding: 10px 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  font-size: 15px;
+}
 
+/* USER (RIGHT) */
+.message.user {
+  align-self: flex-end;
+  background: #00ffd5;
+  color: black;
+  border-radius: 18px 18px 4px 18px;
+}
 
+/* AI (LEFT) */
+.message.assistant {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border-radius: 18px 18px 18px 4px;
+}
+
+/* ===== INPUT AREA ===== */
 .input-area {
   display: flex;
   gap: 10px;
+  margin-top: 12px;
 }
 
 textarea {
-  width: 100%;
-  height: 100px;
+  flex: 1;
+  height: 70px;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
   resize: none;
-  margin-bottom: 12px;
+  outline: none;
+  font-size: 15px;
 }
 
 button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
+  width: 90px;
+  border-radius: 12px;
   border: none;
   background: #00ffd5;
   color: black;
@@ -82,55 +109,29 @@ button {
 button:hover {
   opacity: 0.9;
 }
-textarea,
-button {
-  flex-shrink: 0;
-}
 
+/* ===== MOBILE FIXES ===== */
+@media (max-width: 600px) {
+  body {
+    align-items: stretch;
+  }
 
-/* Base bubble */
-.message {
-  max-width: 80%;
-  padding: 10px 14px;
-  border-radius: 16px;
-  line-height: 1.4;
-  word-wrap: break-word;
-}
-/* User bubble (right) */
-.message.user {
-  align-self: flex-end;
-  background: #00ffd5;
-  color: black;
-  padding: 10px 14px;
-  border-radius: 18px 18px 4px 18px;
-  max-width: 90%;
-  border-bottom-right-radius: 4px;
-}
-/* AI bubble (left) */
-.message.ai {
-  align-self: flex-start;
-  background: rgba(255,255,255,0.15);
-  padding: 10px 14px;
-  color: white;
-  max-width: 90%;
-  border-bottom-left-radius: 4px;
-}
-
-/* Responsive tweaks */
-@media (max-width: 480px) {
   .app {
-    max-width: 100%;
-    height: 100vh;    /* full height */
+    height: 100vh;
     border-radius: 0;
-    padding: 16px;
+    padding: 14px;
   }
 
   textarea {
-    height: 90px;
+    height: 60px;
   }
 
-  #response {
-    min-height: 200px;
-    max-height: none;
+  button {
+    width: 70px;
+  }
+
+  .message {
+    max-width: 92%;
+    font-size: 14px;
   }
 }
