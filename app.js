@@ -2,23 +2,14 @@ const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
 
-function addMessage(text, type) {
-  const div = document.createElement("div");
-  div.className = `message ${type}`;
-  div.textContent = text;
-  responseBox.appendChild(div);
-  responseBox.scrollTop = responseBox.scrollHeight;
-}
-
-let messages = []; // 🔥 THIS IS THE MEMORY (frontend)
+let messages = []; // 🧠 frontend memory
 
 sendBtn.onclick = async () => {
   const userMessage = input.value.trim();
   if (!userMessage) return;
 
-  // Save user message
+  // save + render user message
   messages.push({ role: "user", content: userMessage });
-
   renderMessages();
   input.value = "";
 
@@ -31,7 +22,6 @@ sendBtn.onclick = async () => {
 
     const data = await res.json();
 
-    // Save assistant reply
     messages.push({
       role: "assistant",
       content: data.reply || "No reply."
@@ -53,7 +43,7 @@ function renderMessages() {
 
   messages.forEach(msg => {
     const div = document.createElement("div");
-    div.className = msg.role;
+    div.className = `message ${msg.role}`; // 🔥 THIS WAS THE ISSUE
     div.textContent = msg.content;
     responseBox.appendChild(div);
   });
