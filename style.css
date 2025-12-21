@@ -38,11 +38,11 @@ h1 {
 }
 
 #response {
+  flex: 1;                     /* EXPANDS */
   margin-bottom: 16px;
   padding: 12px;
   background: rgba(255,255,255,0.1);
-  border-radius: 10px;
-  flex: 1;                    /* EXPANDS */
+  border-radius: 10px;                  
   overflow-y: auto;           /* SCROLL */
   white-space: pre-wrap;
 }
