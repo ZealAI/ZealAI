@@ -36,14 +36,7 @@ h1 {
   opacity: 0.8;
   margin-bottom: 16px;
 }
-#chat {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  margin-bottom: 12px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-}
+
 
 #response {
   flex: 1;                     /* EXPANDS */
@@ -84,10 +77,39 @@ button {
 button:hover {
   opacity: 0.9;
 }
-
-
-
 textarea,
 button {
   flex-shrink: 0;
 }
+
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+/* Base bubble */
+.message {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+/* User bubble (right) */
+.message.user {
+  align-self: flex-end;
+  background: #00ffd5;
+  color: black;
+  border-bottom-right-radius: 4px;
+}
+/* AI bubble (left) */
+.message.ai {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border-bottom-left-radius: 4px;
+}
+
