@@ -82,14 +82,7 @@ button {
   flex-shrink: 0;
 }
 
-#chat {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  margin-bottom: 12px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-}
+
 /* Base bubble */
 .message {
   max-width: 80%;
