@@ -17,7 +17,7 @@ body {
   padding: 24px;
   border-radius: 16px;
   width: 100%;
-  max-width: 900px;     /* WIDER */
+  max-width: 1000px;     /* WIDER */
   height: 95vh;         /* TALLER */
   display: flex;
   flex-direction: column;
