@@ -18,7 +18,7 @@ body {
   border-radius: 16px;
   width: 100%;
   max-width: 800px;     /* WIDER */
-  height: 85vh;         /* TALLER */
+  height: 95vh;         /* TALLER */
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
