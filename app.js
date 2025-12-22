@@ -1,27 +1,52 @@
 const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
-const newChatBtn = document.getElementById("newChat"); // make a "New Chat" button in HTML
+const newChatBtn = document.getElementById("newChat");
+const chatList = document.getElementById("chatList");
 
-// 🔥 Memory storage
+// 🔥 All chats live here
 let chatSessions = [];
-let currentSession = 0; // index of current chat
+let currentSession = null;
 
-// Initialize first session
-chatSessions.push([]);
+// Create first chat
+createNewChat();
 
-function addMessageToSession(text, role) {
-  chatSessions[currentSession].push({ role, content: text });
+function createNewChat() {
+  const session = {
+    id: Date.now(),
+    title: "New Chat",
+    messages: []
+  };
+
+  chatSessions.unshift(session);
+  currentSession = session.id;
+  renderChatList();
   renderMessages();
+}
+
+function renderChatList() {
+  chatList.innerHTML = "";
+
+  chatSessions.forEach(chat => {
+    const div = document.createElement("div");
+    div.className = `chat-item ${chat.id === currentSession ? "active" : ""}`;
+    div.textContent = chat.title;
+    div.onclick = () => {
+      currentSession = chat.id;
+      renderChatList();
+      renderMessages();
+    };
+    chatList.appendChild(div);
+  });
 }
 
 function renderMessages() {
   responseBox.innerHTML = "";
-  const messages = chatSessions[currentSession];
+  const chat = chatSessions.find(c => c.id === currentSession);
 
-  messages.forEach(msg => {
+  chat.messages.forEach(msg => {
     const div = document.createElement("div");
-    div.className = `message ${msg.role === "user" ? "user" : "assistant" }`;
+    div.className = `message ${msg.role === "user" ? "user" : "ai"}`;
     div.textContent = msg.content;
     responseBox.appendChild(div);
   });
@@ -30,31 +55,44 @@ function renderMessages() {
 }
 
 sendBtn.onclick = async () => {
-  const userMessage = input.value.trim();
-  if (!userMessage) return;
+  const text = input.value.trim();
+  if (!text) return;
 
-  // Add user message
-  addMessageToSession(userMessage, "user");
+  const chat = chatSessions.find(c => c.id === currentSession);
+
+  chat.messages.push({ role: "user", content: text });
+
+  if (chat.messages.length === 1) {
+    chat.title = text.slice(0, 20) + "...";
+    renderChatList();
+  }
+
+  renderMessages();
   input.value = "";
 
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: chatSessions[currentSession] })
+      body: JSON.stringify({ messages: chat.messages })
     });
 
     const data = await res.json();
-    addMessageToSession(data.reply || "No reply.", "assistant");
 
-  } catch (err) {
-    addMessageToSession("⚠️ Error connecting to ZEAL.AI", "assistant");
+    chat.messages.push({
+      role: "assistant",
+      content: data.reply || "No reply."
+    });
+
+    renderMessages();
+
+  } catch {
+    chat.messages.push({
+      role: "assistant",
+      content: "⚠️ Error connecting to ZEAL.AI"
+    });
+    renderMessages();
   }
 };
 
-// 🔄 New Chat logic
-newChatBtn.onclick = () => {
-  currentSession = chatSessions.length;
-  chatSessions.push([]); // start a fresh chat
-  renderMessages();
-};
+newChatBtn.onclick = createNewChat;
