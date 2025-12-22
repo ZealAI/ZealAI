@@ -1,3 +1,5 @@
+const SAVED_CHATS_KEY = "zeal_chat_sessions";
+
 const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
@@ -5,8 +7,21 @@ const newChatBtn = document.getElementById("newChat");
 const chatList = document.getElementById("chatList");
 
 // 🔥 All chats live here
-let chatSessions = [];
-let currentSession = null;
+let chatSessions = JSON.parse(localStorage.getItem(SAVED_CHATS_KEY)) || [];
+let currentSession = 0;
+
+if (chatSessions.length === 0) {
+  chatSessions.push([]);
+}
+function saveChats() {
+  localStorage.setItem(SAVED_CHATS_KEY, JSON.stringify(chatSessions));
+}
+function addMessageToSession(text, role) {
+  chatSessions[currentSession].push({ role, content: text });
+  saveChats();
+  renderMessages();
+}
+
 
 // Create first chat
 createNewChat();
@@ -96,3 +111,10 @@ sendBtn.onclick = async () => {
 };
 
 newChatBtn.onclick = createNewChat;
+newChatBtn.onclick = () => {
+  currentSession = chatSessions.length;
+  chatSessions.push([]);
+  saveChats();
+  renderMessages();
+};
+
