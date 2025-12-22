@@ -59,13 +59,19 @@ export default {
   You are calm, insightful, non-judgmental, and faith-centered.
   `
   },
-  ...messages
+  ...messages.slice(-12)  // 🔥 PREVENT TOKEN BLOWUPS
 ],
 
           }),
         }
       );
-
+       if (!mistralResponse.ok) {
+        const errText = await mistralResponse.text();
+        return new Response(
+          JSON.stringify({ error: "Mistral error", details: errText }),
+          { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+        );
+      }
       const data = await mistralResponse.json();
 
       return new Response(
