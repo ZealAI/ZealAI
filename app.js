@@ -16,11 +16,6 @@ if (chatSessions.length === 0) {
 function saveChats() {
   localStorage.setItem(SAVED_CHATS_KEY, JSON.stringify(chatSessions));
 }
-function addMessageToSession(text, role) {
-  chatSessions[currentSession].push({ role, content: text });
-  saveChats();
-  renderMessages();
-}
 
 
 // Create first chat
@@ -77,6 +72,13 @@ sendBtn.onclick = async () => {
 
   chat.messages.push({ role: "user", content: text });
 
+  function addMessageToSession(text, role) {
+  chatSessions[currentSession].push({ role, content: text });
+  saveChats();
+  renderMessages();
+}
+
+  
   if (chat.messages.length === 1) {
     chat.title = text.slice(0, 20) + "...";
     renderChatList();
