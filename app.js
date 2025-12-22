@@ -21,7 +21,7 @@ function renderMessages() {
 
   messages.forEach(msg => {
     const div = document.createElement("div");
-    div.className = `message ${msg.role === "user" ? "user" : "ai"}`;
+    div.className = `message ${msg.role === "user" ? "user" : "assistant" }`;
     div.textContent = msg.content;
     responseBox.appendChild(div);
   });
@@ -45,10 +45,10 @@ sendBtn.onclick = async () => {
     });
 
     const data = await res.json();
-    addMessageToSession(data.reply || "No reply.", "ai");
+    addMessageToSession(data.reply || "No reply.", "assistant");
 
   } catch (err) {
-    addMessageToSession("⚠️ Error connecting to ZEAL.AI", "ai");
+    addMessageToSession("⚠️ Error connecting to ZEAL.AI", "assistant");
   }
 };
 
