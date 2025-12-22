@@ -70,7 +70,7 @@ export default {
 
       return new Response(
         JSON.stringify({
-          reply: data.choices?.[0]?.message?.content ?? "No reply",
+          reply: data.choices?.[0]?.message?.content || "No reply",
         }),
         {
           headers: {
