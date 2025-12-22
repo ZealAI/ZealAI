@@ -149,3 +149,55 @@ button {
     font-size: 14px;
   }
 }
+.layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: rgba(0,0,0,0.6);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar button {
+  background: #00ffd5;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#chatList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-item {
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+}
+
+.chat-item.active {
+  background: #00ffd5;
+  color: black;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 90px;
+  }
+  .chat-item {
+    font-size: 12px;
+  }
+}
