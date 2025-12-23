@@ -109,6 +109,22 @@ function renderMessages() {
 
   responseBox.scrollTop = responseBox.scrollHeight;
 }
+function typeText(element, text, speed = 18) {
+  let i = 0;
+  element.textContent = "";
+
+  const interval = setInterval(() => {
+    element.textContent += text.charAt(i);
+    i++;
+
+    element.scrollIntoView({ behavior: "smooth", block: "end" });
+
+    if (i >= text.length) {
+      clearInterval(interval);
+    }
+  }, speed);
+}
+
 
 // ---------- Send ----------
 sendBtn.onclick = async () => {
