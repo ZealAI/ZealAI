@@ -3,10 +3,10 @@
   font-family: system-ui, sans-serif;
 }
 
-/* ===== BODY ===== */
+/* ===== BODY ===== */ 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #0b1a20, #162e38, #1f4452);
+  background: linear-gradient(135deg,  #0f2027, #203a43, #2c5364);
   color: white;
 }
 
