@@ -201,3 +201,12 @@ button {
     font-size: 12px;
   }
 }
+.danger {
+  background: #ff4d4d;
+  color: white;
+  margin-top: 6px;
+}
+
+.danger:hover {
+  opacity: 0.85;
+}
