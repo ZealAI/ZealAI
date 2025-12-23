@@ -181,11 +181,13 @@ button {
 }
 
 .chat-item {
-  padding: 8px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.1);
+  position: relative;
+  padding: 12px 36px 12px 12px;
   cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
+
 
 .chat-item.active {
   background: #00ffd5;
