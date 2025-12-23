@@ -109,21 +109,7 @@ function renderMessages() {
 
   responseBox.scrollTop = responseBox.scrollHeight;
 }
-function typeText(element, text, speed = 18) {
-  let i = 0;
-  element.textContent = "";
 
-  const interval = setInterval(() => {
-    element.textContent += text.charAt(i);
-    i++;
-
-    element.scrollIntoView({ behavior: "smooth", block: "end" });
-
-    if (i >= text.length) {
-      clearInterval(interval);
-    }
-  }, speed);
-}
 
 
 // ---------- Send ----------
@@ -153,28 +139,8 @@ sendBtn.onclick = async () => {
     });
 
     const data = await res.json();
-   // chat.messages.push({ role: "assistant", content: data.reply || "No reply." });
-  const aiMessage = {
-  role: "assistant",
-  content: ""
-};
-
-chat.messages.push(aiMessage);
-renderMessages();
-
-// get the LAST message bubble (the empty AI bubble)
-const aiBubble = responseBox.lastChild;
-
-const replyText = data.reply || "No reply.";
-
-// typing effect
-typeText(aiBubble, replyText);
-
-// save final text after typing finishes
-setTimeout(() => {
-  aiMessage.content = replyText;
-  saveChats();
-}, replyText.length * 18);
+   chat.messages.push({ role: "assistant", content: data.reply || "No reply." });
+  
 
     
   } catch {
