@@ -1,4 +1,4 @@
-const SAVED_CHATS_KEY = "zeal_chat_sessions";
+const STORAGE_KEY = "zeal_chats";
 
 const sendBtn = document.getElementById("send");
 const input = document.getElementById("input");
@@ -6,88 +6,42 @@ const responseBox = document.getElementById("response");
 const newChatBtn = document.getElementById("newChat");
 const chatList = document.getElementById("chatList");
 
-// ---------- Load State ----------
-let chatSessions = JSON.parse(localStorage.getItem(SAVED_CHATS_KEY)) || [];
-let currentSessionId = null;
+let chatSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let currentChatId = null;
 
-// ---------- Helpers ----------
-function saveChats() {
-  localStorage.setItem(SAVED_CHATS_KEY, JSON.stringify(chatSessions));
+/* ---------- Helpers ---------- */
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(chatSessions));
 }
 
-function getCurrentChat() {
-  return chatSessions.find(c => c.id === currentSessionId);
+function currentChat() {
+  return chatSessions.find(c => c.id === currentChatId);
 }
 
-// ---------- Init ----------
-function initApp() {
-  if (chatSessions.length === 0) {
-    createNewChat();
-  } else {
-    currentSessionId = chatSessions[0].id;
-    renderChatList();
-    renderMessages();
-  }
-}
-
-// ---------- Chat Creation ----------
-function createNewChat() {
-  const session = {
-    id: Date.now(),
-    title: "New Chat",
-    messages: []
-  };
-
-  chatSessions.unshift(session);
-  currentSessionId = session.id;
-  saveChats();
-  renderChatList();
-  renderMessages();
-}
-
-// ---------- Delete Chat ----------
-function deleteChat(chatId) {
-  chatSessions = chatSessions.filter(chat => chat.id !== chatId);
-
-  if (chatSessions.length === 0) {
-    createNewChat();
-    return;
-  }
-
-  if (currentSessionId === chatId) {
-    currentSessionId = chatSessions[0].id;
-  }
-
-  saveChats();
-  renderChatList();
-  renderMessages();
-}
-
-// ---------- Rendering ----------
-function renderChatList() {
+/* ---------- Render ---------- */
+function renderChats() {
   chatList.innerHTML = "";
 
   chatSessions.forEach(chat => {
     const item = document.createElement("div");
-    item.className = `chat-item ${chat.id === currentSessionId ? "active" : ""}`;
+    item.className = "chat-item" + (chat.id === currentChatId ? " active" : "");
+    item.textContent = chat.title;
 
-    const title = document.createElement("span");
-    title.textContent = chat.title;
-    title.onclick = () => {
-      currentSessionId = chat.id;
-      renderChatList();
+    item.onclick = () => {
+      currentChatId = chat.id;
+      renderChats();
       renderMessages();
     };
 
-    const del = document.createElement("button");
-    del.textContent = "🗑️";
+    const del = document.createElement("span");
     del.className = "chat-delete";
-    del.onclick = (e) => {
-      e.stopPropagation(); // 🔥 VERY IMPORTANT
+    del.textContent = "⋮";
+
+    del.onclick = e => {
+      e.stopPropagation();
       deleteChat(chat.id);
     };
 
-    item.appendChild(title);
     item.appendChild(del);
     chatList.appendChild(item);
   });
@@ -95,37 +49,59 @@ function renderChatList() {
 
 function renderMessages() {
   responseBox.innerHTML = "";
-  const chat = getCurrentChat();
+  const chat = currentChat();
   if (!chat) return;
 
-  chat.messages.forEach(msg => {
+  chat.messages.forEach(m => {
     const div = document.createElement("div");
-    div.className = `message ${msg.role === "user" ? "user" : "ai"}`;
-    div.textContent = msg.content;
+    div.className = `message ${m.role}`;
+    div.textContent = m.content;
     responseBox.appendChild(div);
   });
 
   responseBox.scrollTop = responseBox.scrollHeight;
 }
 
-// ---------- Send Message ----------
+/* ---------- Chat Logic ---------- */
+function newChat() {
+  const chat = {
+    id: Date.now(),
+    title: "New Chat",
+    messages: []
+  };
+  chatSessions.unshift(chat);
+  currentChatId = chat.id;
+  save();
+  renderChats();
+  renderMessages();
+}
+
+function deleteChat(id) {
+  chatSessions = chatSessions.filter(c => c.id !== id);
+  currentChatId = chatSessions[0]?.id || null;
+  save();
+  renderChats();
+  renderMessages();
+}
+
+/* ---------- Send ---------- */
 sendBtn.onclick = async () => {
   const text = input.value.trim();
   if (!text) return;
 
-  const chat = getCurrentChat();
+  const chat = currentChat();
   if (!chat) return;
 
   chat.messages.push({ role: "user", content: text });
 
   if (chat.messages.length === 1) {
-    chat.title = text.slice(0, 24) + "...";
+    chat.title = text.slice(0, 22) + "...";
   }
 
-  saveChats();
-  renderChatList();
-  renderMessages();
   input.value = "";
+  save();
+  renderChats();
+  renderMessages();
 
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
@@ -135,27 +111,21 @@ sendBtn.onclick = async () => {
     });
 
     const data = await res.json();
-
-    chat.messages.push({
-      role: "assistant",
-      content: data.reply || "No reply."
-    });
-
+    chat.messages.push({ role: "assistant", content: data.reply || "No reply." });
   } catch {
-    chat.messages.push({
-      role: "assistant",
-      content: "⚠️ Error connecting to ZEAL.AI"
-    });
+    chat.messages.push({ role: "assistant", content: "⚠️ Connection error" });
   }
 
-  saveChats();
+  save();
   renderMessages();
 };
 
-// ---------- Buttons ----------
-newChatBtn.onclick = createNewChat;
+/* ---------- Init ---------- */
+newChatBtn.onclick = newChat;
 
-// ---------- Start ----------
-initApp();
-
-
+if (chatSessions.length === 0) newChat();
+else {
+  currentChatId = chatSessions[0].id;
+  renderChats();
+  renderMessages();
+}
