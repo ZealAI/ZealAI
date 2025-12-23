@@ -113,6 +113,14 @@ sendBtn.onclick = async () => {
   renderMessages();
 };
 
+const deleteChatBtn = document.getElementById("deleteChat");
+
+deleteChatBtn.onclick = () => {
+  if (chatSessions.length === 0) return;
+
+  // Remove current chat
+  chatSessions = chatSessions.filter(chat => chat.id !== currentSession);
+
 // ---------- New Chat Button ----------
 newChatBtn.onclick = createNewChat;
 
