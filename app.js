@@ -6,7 +6,7 @@ const responseBox = document.getElementById("response");
 const newChatBtn = document.getElementById("newChat");
 const chatList = document.getElementById("chatList");
 
-// Load saved chats
+// ---------- Load State ----------
 let chatSessions = JSON.parse(localStorage.getItem(SAVED_CHATS_KEY)) || [];
 let currentSessionId = null;
 
@@ -17,6 +17,17 @@ function saveChats() {
 
 function getCurrentChat() {
   return chatSessions.find(c => c.id === currentSessionId);
+}
+
+// ---------- Init ----------
+function initApp() {
+  if (chatSessions.length === 0) {
+    createNewChat();
+  } else {
+    currentSessionId = chatSessions[0].id;
+    renderChatList();
+    renderMessages();
+  }
 }
 
 // ---------- Chat Creation ----------
@@ -34,22 +45,51 @@ function createNewChat() {
   renderMessages();
 }
 
+// ---------- Delete Chat ----------
+function deleteChat(chatId) {
+  chatSessions = chatSessions.filter(chat => chat.id !== chatId);
+
+  if (chatSessions.length === 0) {
+    createNewChat();
+    return;
+  }
+
+  if (currentSessionId === chatId) {
+    currentSessionId = chatSessions[0].id;
+  }
+
+  saveChats();
+  renderChatList();
+  renderMessages();
+}
+
 // ---------- Rendering ----------
 function renderChatList() {
   chatList.innerHTML = "";
 
   chatSessions.forEach(chat => {
-    const div = document.createElement("div");
-    div.className = `chat-item ${chat.id === currentSessionId ? "active" : ""}`;
-    div.textContent = chat.title;
+    const item = document.createElement("div");
+    item.className = `chat-item ${chat.id === currentSessionId ? "active" : ""}`;
 
-    div.onclick = () => {
+    const title = document.createElement("span");
+    title.textContent = chat.title;
+    title.onclick = () => {
       currentSessionId = chat.id;
       renderChatList();
       renderMessages();
     };
 
-    chatList.appendChild(div);
+    const del = document.createElement("button");
+    del.textContent = "🗑️";
+    del.className = "chat-delete";
+    del.onclick = (e) => {
+      e.stopPropagation(); // 🔥 VERY IMPORTANT
+      deleteChat(chat.id);
+    };
+
+    item.appendChild(title);
+    item.appendChild(del);
+    chatList.appendChild(item);
   });
 }
 
@@ -78,7 +118,6 @@ sendBtn.onclick = async () => {
 
   chat.messages.push({ role: "user", content: text });
 
-  // Set title on first message
   if (chat.messages.length === 1) {
     chat.title = text.slice(0, 24) + "...";
   }
@@ -113,33 +152,10 @@ sendBtn.onclick = async () => {
   renderMessages();
 };
 
-const deleteChatBtn = document.getElementById("deleteChat");
+// ---------- Buttons ----------
+newChatBtn.onclick = createNewChat;
 
-deleteChatBtn.onclick = () => {
-  if (!currentSessionId) return;
+// ---------- Start ----------
+initApp();
 
-  // Remove the active chat
-  chatSessions = chatSessions.filter(
-    chat => chat.id !== currentSessionId
-  );
 
-  // If chats still exist, switch to the newest
-  if (chatSessions.length > 0) {
-    currentSessionId = chatSessions[0].id;
-  } else {
-    // If all chats deleted, create a new one
-    const session = {
-      id: Date.now(),
-      title: "New Chat",
-      messages: []
-    };
-    chatSessions.push(session);
-    currentSessionId = session.id;
-  }
-
-  saveChats();
-  renderChatList();
-  renderMessages();
-};
-
- 
