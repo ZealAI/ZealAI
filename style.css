@@ -3,9 +3,10 @@
   font-family: system-ui, sans-serif;
 }
 
+/* ===== BODY ===== */
 body {
   margin: 0;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, #0b1a20, #162e38, #1f4452);
   color: white;
 }
 
@@ -18,13 +19,14 @@ body {
 /* ===== SIDEBAR ===== */
 .sidebar {
   width: 260px;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0,0,0,0.7);
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+/* New Chat button */
 .sidebar button {
   background: #00ffd5;
   border: none;
@@ -34,41 +36,55 @@ body {
   cursor: pointer;
 }
 
-/* Chat list */
+/* ===== CHAT LIST ===== */
 #chatList {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/* Chat item */
+/* Chat item row */
 .chat-item {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
   padding: 12px;
   border-radius: 8px;
   cursor: pointer;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.07);
 }
 
+/* Active chat */
 .chat-item.active {
   background: #00ffd5;
   color: black;
 }
 
-/* 3 dots */
-.chat-menu {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  cursor: pointer;
-  opacity: 0.6;
+/* Chat title text */
+.chat-item span {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.chat-menu:hover {
+/* Delete icon */
+.chat-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.6;
+  color: inherit;
+}
+
+.chat-delete:hover {
   opacity: 1;
 }
 
-/* ===== APP ===== */
+/* ===== MAIN APP ===== */
 .app {
   flex: 1;
   padding: 24px;
@@ -76,6 +92,7 @@ body {
   flex-direction: column;
 }
 
+/* Header */
 h1 {
   margin: 0;
   text-align: center;
@@ -83,14 +100,14 @@ h1 {
 
 .subtitle {
   text-align: center;
-  opacity: 0.7;
+  opacity: 0.65;
   margin-bottom: 10px;
 }
 
-/* Chat area */
+/* ===== CHAT AREA ===== */
 #response {
   flex: 1;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
   border-radius: 12px;
   padding: 12px;
   overflow-y: auto;
@@ -104,6 +121,7 @@ h1 {
   max-width: 80%;
   padding: 10px 14px;
   border-radius: 16px;
+  line-height: 1.4;
 }
 
 .message.user {
@@ -114,10 +132,10 @@ h1 {
 
 .message.ai {
   align-self: flex-start;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.14);
 }
 
-/* Input */
+/* ===== INPUT AREA ===== */
 .input-area {
   display: flex;
   gap: 10px;
@@ -130,8 +148,20 @@ textarea {
   border-radius: 8px;
   padding: 10px;
   border: none;
+  resize: none;
 }
 
+/* Send button */
 #send {
   width: 80px;
+  background: #3b82f6; /* blue */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#send:hover {
+  opacity: 0.9;
 }
