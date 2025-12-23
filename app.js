@@ -116,21 +116,30 @@ sendBtn.onclick = async () => {
 const deleteChatBtn = document.getElementById("deleteChat");
 
 deleteChatBtn.onclick = () => {
-  if (chatSessions.length === 0) return;
+  if (!currentSessionId) return;
 
-  // Remove current chat
-  chatSessions = chatSessions.filter(chat => chat.id !== currentSession);
+  // Remove the active chat
+  chatSessions = chatSessions.filter(
+    chat => chat.id !== currentSessionId
+  );
 
-// ---------- New Chat Button ----------
-newChatBtn.onclick = createNewChat;
+  // If chats still exist, switch to the newest
+  if (chatSessions.length > 0) {
+    currentSessionId = chatSessions[0].id;
+  } else {
+    // If all chats deleted, create a new one
+    const session = {
+      id: Date.now(),
+      title: "New Chat",
+      messages: []
+    };
+    chatSessions.push(session);
+    currentSessionId = session.id;
+  }
 
-// ---------- Init ----------
-if (chatSessions.length === 0) {
-  createNewChat();
-} else {
-  currentSessionId = chatSessions[0].id;
+  saveChats();
   renderChatList();
   renderMessages();
-}
+};
 
  
