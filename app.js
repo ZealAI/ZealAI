@@ -5,6 +5,7 @@ const input = document.getElementById("input");
 const responseBox = document.getElementById("response");
 const newChatBtn = document.getElementById("newChat");
 const chatList = document.getElementById("chatList");
+const sidebar = document.querySelector(".sidebar");
 
 // ---------- Load ----------
 let chatSessions = JSON.parse(localStorage.getItem(SAVED_CHATS_KEY)) || [];
@@ -110,7 +111,27 @@ function renderMessages() {
   responseBox.scrollTop = responseBox.scrollHeight;
 }
 
+// ---------- Typing Effect ----------
+function typeMessage(text, chat) {
+  const div = document.createElement("div");
+  div.className = "message assistant";
+  responseBox.appendChild(div);
 
+  let i = 0;
+  const speed = 18; // typing speed
+
+  const interval = setInterval(() => {
+    div.textContent += text[i];
+    i++;
+    responseBox.scrollTop = responseBox.scrollHeight;
+
+    if (i >= text.length) {
+      clearInterval(interval);
+      chat.messages.push({ role: "assistant", content: text });
+      saveChats();
+    }
+  }, speed);
+}
 
 // ---------- Send ----------
 sendBtn.onclick = async () => {
@@ -139,21 +160,36 @@ sendBtn.onclick = async () => {
     });
 
     const data = await res.json();
-   chat.messages.push({ role: "assistant", content: data.reply || "No reply." });
-  
+    const reply = data.reply || "No reply.";
 
-    
+    typeMessage(reply, chat);
+
   } catch {
-    chat.messages.push({
-      role: "assistant",
-      content: "⚠️ Error connecting to ZEAL.AI"
-    });
+    typeMessage("⚠️ Error connecting to ZEAL.AI", chat);
   }
+};
 
-  saveChats();
-  renderMessages();
+// ---------- Sidebar Toggle (Mobile Friendly) ----------
+const toggleBtn = document.createElement("button");
+toggleBtn.textContent = "☰";
+toggleBtn.style.position = "fixed";
+toggleBtn.style.top = "12px";
+toggleBtn.style.left = "12px";
+toggleBtn.style.zIndex = "999";
+toggleBtn.style.background = "#007bff";
+toggleBtn.style.color = "white";
+toggleBtn.style.border = "none";
+toggleBtn.style.borderRadius = "8px";
+toggleBtn.style.padding = "8px 12px";
+toggleBtn.style.cursor = "pointer";
+
+document.body.appendChild(toggleBtn);
+
+toggleBtn.onclick = () => {
+  sidebar.classList.toggle("hidden");
 };
 
 newChatBtn.onclick = createNewChat;
 
 initApp();
+
