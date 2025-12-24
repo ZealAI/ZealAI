@@ -6,7 +6,7 @@
 /* ===== BODY ===== */ 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #05080d, #101820, #18232d);
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: white;
 }
 
@@ -89,8 +89,9 @@ body {
   flex: 1;
   padding: 24px;
   display: flex;
-  background: rgba(0,0,0,0.75); /* subtle dark overlay */
+  background: rgba(0,0,0,0.4); /* subtle dark overlay */
   flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
 /* Header */
@@ -108,7 +109,7 @@ h1 {
 /* ===== CHAT AREA ===== */
 #response {
   flex: 1;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.1);
   border-radius: 12px;
   padding: 12px;
   overflow-y: auto;
@@ -133,7 +134,7 @@ h1 {
 
 .message.ai {
   align-self: flex-start;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
 }
 
 /* ===== INPUT AREA ===== */
