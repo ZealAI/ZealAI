@@ -173,8 +173,8 @@ sendBtn.onclick = async () => {
 const toggleBtn = document.createElement("button");
 toggleBtn.textContent = "☰";
 toggleBtn.style.position = "fixed";
-toggleBtn.style.top = "12px";
-toggleBtn.style.right = "12px";
+toggleBtn.style.bottom = "12px";
+toggleBtn.style.left = "12px";
 toggleBtn.style.zIndex = "999";
 toggleBtn.style.background = "#007bff";
 toggleBtn.style.color = "white";
