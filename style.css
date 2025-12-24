@@ -255,5 +255,19 @@ x/* Sidebar hide */
   }
 }
 
+.toggle-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-bottom: 10px; /* 👈 space between toggle & New Chat */
+}
+
+.toggle-btn:hover {
+  opacity: 0.9;
+}
 
 
