@@ -173,8 +173,7 @@ textarea {
 /* Sidebar hide */
 .sidebar.hidden {
   transform: translateX(-100%);
-  position: absolute;
-  gap: 12px;
+   transition: transform 0.25s ease;
 }
 
 /* Delete icon on right */
@@ -195,10 +194,6 @@ textarea {
 .chat-delete:hover {
   opacity: 1;
 }
-
-
-
-
 
 /* Sidebar header */
 .sidebar-header {
@@ -244,7 +239,7 @@ textarea {
   padding: 8px 12px;
   cursor: pointer;
   font-size: 18px;
-  margin-bottom: 10px; /* 👈 space between toggle & New Chat */
+  margin-bottom: 12px; /* 👈 space between toggle & New Chat */
 }
 
 .toggleBtn:hover {
