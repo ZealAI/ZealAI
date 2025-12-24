@@ -5,7 +5,7 @@
 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #0b1a1f, #122c34, #1c3a45);
+  background: linear-gradient(135deg,  #0b1a1f, #162b33, #1f3b44);
   color: white;
 }
 
@@ -24,6 +24,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  transform: translateX(0);
   transition: transform 0.3s ease;
   position: relative;
   z-index: 20;
@@ -36,9 +37,10 @@ body {
 
 /* ===== TOGGLE BUTTON ===== */
 .toggle-btn {
-  position: absolute;
+  position: fixed;
   top: 14px;
-  right: -46px; /* 👈 sits OUTSIDE sidebar */
+  left: 14px;/* 👈 sits OUTSIDE sidebar */
+  z-index: 1000;
   background: #007bff;
   color: white;
   border: none;
