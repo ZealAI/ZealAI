@@ -6,7 +6,7 @@ const responseBox = document.getElementById("response");
 const newChatBtn = document.getElementById("newChat");
 const chatList = document.getElementById("chatList");
 const sidebar = document.querySelector(".sidebar");
-const toggleBtn = document.getElementById("toggleSidebar");
+
 
 // ---------- Load ----------
 let chatSessions = JSON.parse(localStorage.getItem(SAVED_CHATS_KEY)) || [];
@@ -171,7 +171,7 @@ sendBtn.onclick = async () => {
 };
 
 
-
+const toggleBtn = document.getElementById("toggleSidebar");
 toggleBtn.onclick = () => {
   sidebar.classList.toggle("hidden");
 };
