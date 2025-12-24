@@ -108,7 +108,7 @@ h1 {
 /* ===== CHAT AREA ===== */
 #response {
   flex: 1;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
   border-radius: 12px;
   padding: 12px;
   overflow-y: auto;
@@ -155,7 +155,7 @@ textarea {
 /* Send button */
 #send {
   width: 80px;
-  background: #3b82f6; /* blue */
+  background: #00ffd5; /* blue */
   color: white;
   border: none;
   border-radius: 8px;
