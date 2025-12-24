@@ -216,10 +216,7 @@ textarea {
   opacity: 1;
 }
 
-/* Sidebar hidden state */
-.sidebar.hidden {
-  display: none;
-}
+
 
 /* Mobile: sidebar overlays instead of squeezing app */
 @media (max-width: 768px) {
@@ -234,10 +231,10 @@ textarea {
 }
 
 .toggleSidebar {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 1000;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 2000;
   background: #007bff;
   border: none;
   border-radius: 8px;
