@@ -89,7 +89,7 @@ body {
   flex: 1;
   padding: 24px;
   display: flex;
-  background: rgba(0,0,0,0.7); /* subtle dark overlay */
+  background: rgba(0,0,0,0.6); /* subtle dark overlay */
   flex-direction: column;
 }
 
