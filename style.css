@@ -3,10 +3,9 @@
   font-family: system-ui, sans-serif;
 }
 
-/* ===== BODY ===== */ 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, #0b1a20, #162c33, #1e3a44);
   color: white;
 }
 
@@ -14,23 +13,43 @@ body {
 .layout {
   display: flex;
   height: 100vh;
+  position: relative;
+}
+
+/* ===== TOGGLE BUTTON (ALWAYS VISIBLE) ===== */
+.toggleSidebar {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 1000;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 18px;
 }
 
 /* ===== SIDEBAR ===== */
 .sidebar {
   width: 260px;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0, 0, 0, 0.85);
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   transition: transform 0.3s ease;
 }
 
-/* New Chat button */
+/* Sidebar hidden (slide, NOT disappear) */
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+/* Sidebar buttons */
 .sidebar button {
   background: #00ffd5;
-  gap: 12px;
   border: none;
   padding: 10px;
   border-radius: 8px;
@@ -45,30 +64,26 @@ body {
   gap: 6px;
 }
 
-/* Chat item row */
 .chat-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-
+  gap: 8px;
   padding: 12px;
   border-radius: 8px;
-  cursor: pointer;
   background: rgba(255,255,255,0.07);
+  cursor: pointer;
 }
 
-/* Active chat */
 .chat-item.active {
   background: #00ffd5;
   color: black;
 }
 
-/* Chat title text */
 .chat-item span {
   flex: 1;
-  white-space: nowrap;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
@@ -76,10 +91,9 @@ body {
 .chat-delete {
   background: transparent;
   border: none;
-  cursor: pointer;
   font-size: 16px;
-  opacity: 0.6;
-  color: inherit;
+  cursor: pointer;
+  opacity: 0.5;
 }
 
 .chat-delete:hover {
@@ -90,10 +104,9 @@ body {
 .app {
   flex: 1;
   padding: 24px;
+  background: rgba(0,0,0,0.45);
   display: flex;
-  background: rgba(0,0,0,0.4); /* subtle dark overlay */
   flex-direction: column;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
 /* Header */
@@ -111,7 +124,7 @@ h1 {
 /* ===== CHAT AREA ===== */
 #response {
   flex: 1;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
   border-radius: 12px;
   padding: 12px;
   overflow-y: auto;
@@ -134,12 +147,12 @@ h1 {
   color: black;
 }
 
-.message.ai {
+.message.assistant {
   align-self: flex-start;
   background: rgba(255,255,255,0.08);
 }
 
-/* ===== INPUT AREA ===== */
+/* ===== INPUT ===== */
 .input-area {
   display: flex;
   gap: 10px;
@@ -149,17 +162,18 @@ h1 {
 textarea {
   flex: 1;
   height: 70px;
-  background:rgba(0,0,0,0.15);
+  background: rgba(0,0,0,0.2);
   border-radius: 8px;
   padding: 10px;
   border: none;
   resize: none;
+  color: white;
 }
 
 /* Send button */
 #send {
   width: 80px;
-  background: #00ffd5; /* blue */
+  background: #007bff;
   color: white;
   border: none;
   border-radius: 8px;
@@ -171,81 +185,13 @@ textarea {
   opacity: 0.9;
 }
 
-/* Sidebar hide */
-.sidebar.hidden {
-  transform: translateX(-100%);
-   transition: transform 0.3s ease;
-}
-
-/* Delete icon on right */
-.chat-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.chat-delete {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  opacity: 0.5;
-  font-size: 16px;
-}
-
-.chat-delete:hover {
-  opacity: 1;
-}
-
-/* Sidebar header */
-.sidebar-header {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Icon button */
-.icon-btn {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-  opacity: 0.8;
-}
-
-.icon-btn:hover {
-  opacity: 1;
-}
-
-
-
-/* Mobile: sidebar overlays instead of squeezing app */
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .sidebar {
     position: absolute;
     left: 0;
     top: 0;
     height: 100%;
-    z-index: 10;
-    transition: transform 0.3s ease;
+    z-index: 500;
   }
 }
-
-.toggleSidebar {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 2000;
-  background: #007bff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 18px;
-  margin-bottom: 12px; /* 👈 space between toggle & New Chat */
-}
-
-.toggleSidebar:hover {
-  opacity: 0.9;
-}
-
-
