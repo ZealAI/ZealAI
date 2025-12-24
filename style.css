@@ -219,7 +219,41 @@ x/* Sidebar hide */
   opacity: 1;
 }
 
-
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end;
 }
+
+/* Icon button */
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+}
+
+/* Sidebar hidden state */
+.sidebar.hidden {
+  display: none;
+}
+
+/* Mobile: sidebar overlays instead of squeezing app */
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 10;
+  }
+}
+
 
 
