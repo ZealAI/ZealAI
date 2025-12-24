@@ -6,7 +6,7 @@ const responseBox = document.getElementById("response");
 const newChatBtn = document.getElementById("newChat");
 const chatList = document.getElementById("chatList");
 const sidebar = document.querySelector(".sidebar");
-//const toggleBtn = document.getElementById("toggleSidebar");
+const toggleBtn = document.getElementById("toggleSidebar");
 
 // ---------- Load ----------
 let chatSessions = JSON.parse(localStorage.getItem(SAVED_CHATS_KEY)) || [];
@@ -170,21 +170,7 @@ sendBtn.onclick = async () => {
   }
 };
 
-// ---------- Sidebar Toggle (Mobile Friendly) ----------
-const toggleBtn = document.createElement("button");
-toggleBtn.textContent = "☰";
-toggleBtn.style.position = "fixed";
-toggleBtn.style.top = "12px";
-toggleBtn.style.left = "12px";
-toggleBtn.style.zIndex = "999";
-toggleBtn.style.background = "#007bff";
-toggleBtn.style.color = "white";
-toggleBtn.style.border = "none";
-toggleBtn.style.borderRadius = "8px";
-toggleBtn.style.padding = "8px 12px";
-toggleBtn.style.cursor = "pointer";
 
-document.body.appendChild(toggleBtn);
 
 toggleBtn.onclick = () => {
   sidebar.classList.toggle("hidden");
