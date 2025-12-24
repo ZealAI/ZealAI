@@ -29,6 +29,7 @@ body {
 /* New Chat button */
 .sidebar button {
   background: #00ffd5;
+  margin-top: 10px;
   border: none;
   padding: 10px;
   border-radius: 8px;
@@ -255,7 +256,7 @@ x/* Sidebar hide */
   }
 }
 
-.toggle-btn {
+.toggleBtn {
   background: #007bff;
   color: white;
   border: none;
@@ -266,7 +267,7 @@ x/* Sidebar hide */
   margin-bottom: 10px; /* 👈 space between toggle & New Chat */
 }
 
-.toggle-btn:hover {
+.toggleBtn:hover {
   opacity: 0.9;
 }
 
