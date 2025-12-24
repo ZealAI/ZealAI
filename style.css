@@ -231,7 +231,10 @@ textarea {
   }
 }
 
-.toggleBtn {
+.toggleSidebar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
   background: #007bff;
   color: white;
   border: none;
@@ -242,7 +245,7 @@ textarea {
   margin-bottom: 12px; /* 👈 space between toggle & New Chat */
 }
 
-.toggleBtn:hover {
+.toggleSidebar:hover {
   opacity: 0.9;
 }
 
