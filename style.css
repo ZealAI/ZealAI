@@ -29,7 +29,7 @@ body {
 /* New Chat button */
 .sidebar button {
   background: #00ffd5;
-  margin-top: 17px;
+  gap: 12px;
   border: none;
   padding: 10px;
   border-radius: 8px;
@@ -174,6 +174,7 @@ textarea {
 .sidebar.hidden {
   transform: translateX(-100%);
   position: absolute;
+  gap: 12px;
 }
 
 /* Delete icon on right */
@@ -195,30 +196,9 @@ textarea {
   opacity: 1;
 }
 
-x/* Sidebar hide */
-.sidebar.hidden {
-  transform: translateX(-100%);
-  position: absolute;
-}
 
-/* Delete icon on right */
-.chat-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.chat-delete {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  opacity: 0.5;
-  font-size: 16px;
-}
 
-.chat-delete:hover {
-  opacity: 1;
-}
 
 /* Sidebar header */
 .sidebar-header {
