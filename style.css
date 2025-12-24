@@ -89,7 +89,7 @@ body {
   flex: 1;
   padding: 24px;
   display: flex;
-  background: rgba(0,0,0,0.6); /* subtle dark overlay */
+  background: rgba(0,0,0,0.85); /* subtle dark overlay */
   flex-direction: column;
 }
 
@@ -108,7 +108,7 @@ h1 {
 /* ===== CHAT AREA ===== */
 #response {
   flex: 1;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.6);
   border-radius: 12px;
   padding: 12px;
   overflow-y: auto;
@@ -133,7 +133,7 @@ h1 {
 
 .message.ai {
   align-self: flex-start;
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.6);
 }
 
 /* ===== INPUT AREA ===== */
@@ -146,7 +146,7 @@ h1 {
 textarea {
   flex: 1;
   height: 70px;
-  background:rgba(0,0,0,0.4);
+  background:rgba(0,0,0,0.7);
   border-radius: 8px;
   padding: 10px;
   border: none;
