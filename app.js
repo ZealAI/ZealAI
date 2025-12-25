@@ -100,8 +100,15 @@ function renderChatList() {
 function renderMessages() {
   responseBox.innerHTML = "";
   const chat = getCurrentChat();
-  if (!chat) return;
+ const empty = document.getElementById("emptyState");
 
+  if (!chat || chat.messages.length === 0) {
+    empty.style.display = "flex";
+    return;
+  }
+  
+ empty.style.display = "none";
+  
   chat.messages.forEach(msg => {
     const div = document.createElement("div");
     div.className = `message ${msg.role === "user" ? "user" : "assistant"}`;
