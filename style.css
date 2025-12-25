@@ -195,8 +195,8 @@ textarea {
 }
 
 .app-icon {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
 }
 #emptyState {
   flex: 1;
@@ -208,7 +208,7 @@ textarea {
 }
 
 .empty-orb {
-  width: 90px;
+  width: 24px;
   margin-bottom: 12px;
 }
 
