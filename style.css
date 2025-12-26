@@ -28,11 +28,13 @@ body {
   transition: transform 0.3s ease;
   position: relative;
   z-index: 20;
+  overflow: hidden;
 }
 
 /* Hide sidebar (slide, not vanish) */
 .sidebar.hidden {
   transform: translateX(-100%);
+  width: 0;
 }
 
 /* ===== TOGGLE BUTTON ===== */
@@ -113,6 +115,7 @@ body {
   flex: 1;
   padding: 24px;
   display: flex;
+  transition: all 0.3s ease;
   flex-direction: column;
   background: rgba(0,0,0,0.5);
 }
