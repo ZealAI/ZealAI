@@ -79,7 +79,7 @@ body {
   justify-content: space-between;
   padding: 12px;
   border-radius: 10px;
-  background: rgba(0,0,0,0.5);
+  background: rgba(225,225,225,0.08);
   cursor: pointer;
 }
 
@@ -131,7 +131,7 @@ h1 {
 /* Chat area */
 #response {
   flex: 1;
-  background: rgba(0,0,0,0.5);
+  background: transparent;
   border-radius: 14px;
   padding: 14px;
   overflow-y: auto;
@@ -171,7 +171,7 @@ textarea {
   border-radius: 10px;
   padding: 10px;
   border: none;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.25);
   color: white;
 }
 
