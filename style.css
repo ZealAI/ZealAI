@@ -30,12 +30,28 @@ body {
   z-index: 20;
   overflow: hidden;
 }
+@media (max-width: 768px) {
+  .sidebar {
+    width: 75vw;       /* BIG, comfy, readable */
+    max-width: 240px;  /* prevents it from going wild */
+    min-width: 200px;  /* no more skinny nonsense */
+  }
+}
+
+
 
 /* Hide sidebar (slide, not vanish) */
 .sidebar.hidden {
   transform: translateX(-100%);
   width: 0;
 }
+@media (max-width: 768px) {
+  .sidebar.collapsed {
+    width: 0px; /* enough to see icons properly */
+  }
+}
+
+
 
 /* ===== TOGGLE BUTTON ===== */
 .toggle-btn {
