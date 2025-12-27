@@ -3,9 +3,10 @@
   font-family: system-ui, sans-serif;
 }
 
+/* ===== BODY ===== */
 body {
   margin: 0;
-  background: linear-gradient(135deg,  #0b1a1f, #162b33, #1f3b44);
+  background: linear-gradient(135deg, #0b1a1f, #162b33, #1f3b44);
   color: white;
 }
 
@@ -14,6 +15,7 @@ body {
   display: flex;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 /* ===== SIDEBAR ===== */
@@ -24,40 +26,38 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transform: translateX(0);
   transition: transform 0.3s ease;
-  position: relative;
   z-index: 20;
-  overflow: hidden;
-}
-@media (max-width: 768px) {
-  .sidebar {
-    width: 75vw;       /* BIG, comfy, readable */
-    max-width: 240px;  /* prevents it from going wild */
-    min-width: 200px;  /* no more skinny nonsense */
-  }
 }
 
-
-
-/* Hide sidebar (slide, not vanish) */
+/* Desktop behavior */
 .sidebar.hidden {
   transform: translateX(-100%);
-  width: 0;
 }
+
+/* ===== MOBILE SIDEBAR (OVERLAY MODE) ===== */
 @media (max-width: 768px) {
-  .sidebar.collapsed {
-    width: 0px; /* enough to see icons properly */
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 75vw;
+    max-width: 260px;
+    min-width: 220px;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
   }
 }
-
-
 
 /* ===== TOGGLE BUTTON ===== */
 .toggle-btn {
   position: fixed;
   top: 14px;
-  left: 14px;/* 👈 sits OUTSIDE sidebar */
+  left: 14px;
   z-index: 1000;
   background: #007bff;
   color: white;
@@ -69,13 +69,9 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
-.toggle-btn:hover {
-  opacity: 0.9;
-}
-
 /* ===== NEW CHAT BUTTON ===== */
 #newChat {
-  margin-top: 50px; /* space from toggle */
+  margin-top: 50px;
   background: #00ffd5;
   border: none;
   padding: 12px;
@@ -93,12 +89,11 @@ body {
 
 .chat-item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 12px;
   border-radius: 10px;
-  background: rgba(225,225,225,0.08);
-  cursor: pointer;
+  background: rgba(255,255,255,0.08);
 }
 
 .chat-item.active {
@@ -106,40 +101,34 @@ body {
   color: black;
 }
 
-.chat-item span {
-  flex: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* Delete icon */
 .chat-delete {
   background: transparent;
   border: none;
-  font-size: 16px;
   cursor: pointer;
   opacity: 0.6;
-}
-
-.chat-delete:hover {
-  opacity: 1;
 }
 
 /* ===== APP ===== */
 .app {
   flex: 1;
-  padding: 24px;
+  width: 100%;
+  padding: 20px;
   display: flex;
-  transition: all 0.3s ease;
   flex-direction: column;
   background: rgba(0,0,0,0.5);
 }
 
 /* Header */
-h1 {
-  margin: 0;
-  text-align: center;
+.app-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-icon {
+  width: 48px;
+  height: 48px;
 }
 
 .subtitle {
@@ -147,11 +136,9 @@ h1 {
   opacity: 0.6;
 }
 
-/* Chat area */
+/* ===== CHAT AREA ===== */
 #response {
   flex: 1;
-  background: transparent;
-  border-radius: 14px;
   padding: 14px;
   overflow-y: auto;
   display: flex;
@@ -177,11 +164,11 @@ h1 {
   background: rgba(255,255,255,0.12);
 }
 
-/* Input */
+/* ===== INPUT ===== */
 .input-area {
   display: flex;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 textarea {
@@ -194,45 +181,26 @@ textarea {
   color: white;
 }
 
-/* Send button */
 #send {
   width: 90px;
+  border-radius: 10px;
+  border: none;
   background: #007bff;
   color: white;
-  border: none;
-  border-radius: 10px;
   font-weight: bold;
-  cursor: pointer;
 }
 
-.app-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-
-.app-icon {
-  width: 48px;
-  height: 48px;
-}
+/* ===== EMPTY STATE ===== */
 #emptyState {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   opacity: 0.7;
 }
 
 .empty-orb {
-  width: 24px;
+  width: 60px;
   margin-bottom: 12px;
 }
-
-.empty-text {
-  font-style: italic;
-  opacity: 0.8;
-}
-
