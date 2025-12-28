@@ -1,7 +1,7 @@
 {
   "name": "ZealAI",
   "short_name": "ZealAI",
-  "start_url": ".",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0f2027",
   "theme_color": "#0f2027",
@@ -16,7 +16,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-   "display": "standalone",
-  "start_url": "/"
+  ]
+   
 }
