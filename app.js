@@ -97,27 +97,53 @@ function renderChatList() {
 }
 
 // ---------- Render Messages ----------
+//function renderMessages() {
+//  responseBox.innerHTML = "";
+// 
+
+//  if (!chat || chat.messages.length === 0) {
+ //   empty.style.display = "flex";
+//    return;
+  //}
+  
+ //empty.style.display = "none";
+  
+  //chat.messages.forEach(msg => {
+    //const div = document.createElement("div");
+   // div.className = `message ${msg.role === "user" ? "user" : "assistant"}`;
+    //div.textContent = msg.content;
+    //responseBox.appendChild(div);
+  //});
+
+  //responseBox.scrollTop = responseBox.scrollHeight;
+//}
 function renderMessages() {
   responseBox.innerHTML = "";
-  const chat = getCurrentChat();
- const empty = document.getElementById("emptyState");
+   const chat = getCurrentChat();
+   const empty = document.getElementById("emptyState");
+   const messages = chatSessions[currentSession];
 
-  if (!chat || chat.messages.length === 0) {
-    empty.style.display = "flex";
-    return;
-  }
-  
- empty.style.display = "none";
-  
-  chat.messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = `message ${msg.role === "user" ? "user" : "assistant"}`;
-    div.textContent = msg.content;
-    responseBox.appendChild(div);
+   chat messages.forEach(msg => {
+    const container = document.createElement("div");
+    container.className = `message ${msg.role}`;
+
+    // 🔥 SPLIT RESPONSE INTO LINES
+    const lines = msg.content.split("\n").filter(line => line.trim() !== "");
+
+    lines.forEach(line => {
+      const p = document.createElement("p");
+      p.textContent = line;
+      p.style.marginBottom = "10px"; // vertical spacing
+      container.appendChild(p);
+    });
+
+    responseBox.appendChild(container);
   });
 
   responseBox.scrollTop = responseBox.scrollHeight;
 }
+
+
 
 // ---------- Typing Effect ----------
 function typeMessage(text, chat) {
