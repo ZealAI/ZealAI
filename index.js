@@ -11,6 +11,39 @@ export default {
         },
       });
     }
+    const ip =
+  request.headers.get("CF-Connecting-IP") ||
+  request.headers.get("x-forwarded-for") ||
+  "unknown";
+
+const key = `rate:${ip}`;
+const limit = 10;
+const windowSeconds = 60;
+
+// Get current count
+let count = await caches.default.match(key);
+count = count ? Number(await count.text()) : 0;
+
+if (count >= limit) {
+  return new Response(
+    JSON.stringify({ error: "Too many requests. Slow down." }),
+    {
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    }
+  );
+}
+
+// Increment count
+await caches.default.put(
+  key,
+  new Response(String(count + 1)),
+  { expirationTtl: windowSeconds }
+);
+
 
     // Health check
     if (request.method !== "POST") {
