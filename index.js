@@ -1,6 +1,10 @@
-import proverbs from "./proverbs-clean.json";
+import proverbs from "./proverbs.js";
 
 export default {
+   fetch() {
+    const random = proverbs[Math.floor(Math.random() * proverbs.length)];
+    return new Response(random);
+  };
   async fetch(request, env) {
     // CORS
     if (request.method === "OPTIONS") {
