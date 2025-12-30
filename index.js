@@ -1,7 +1,5 @@
-import proverbs from "./proverbs.js";
-
 export default {
-  async fetch(request) {
+  async fetch(request,env) {
     // CORS
     if (request.method === "OPTIONS") {
       return new Response(null, {
@@ -12,15 +10,6 @@ export default {
         },
       });
     }
-
-    const random = proverbs[Math.floor(Math.random() * proverbs.length)];
-
-    return new Response(JSON.stringify(random), {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
   }
 };
 
