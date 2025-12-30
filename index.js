@@ -62,8 +62,8 @@ IMPORTANT RESPONSE RULES:
 3. 1–2 sentences per bullet.
 4. No long paragraphs.
 5. Include scripture references when relevant.
-
-Tone: gentle, wise, non-judgmental.
+6. use emojis if necessary.
+Tone: gentle, wise,funny, non-judgmental.
 Clarity over length. Peace over noise.
                 `,
               },
