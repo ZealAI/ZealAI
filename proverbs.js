@@ -4,7 +4,7 @@ const proverbs= [
     "book": "Proverbs",
     "chapter": 1,
     "verse": 1,
-    "text": "The proverbs of Solomon.."
+    "text": "The proverbs of Solomon;"
   },
   {
     "book": "Proverbs",
