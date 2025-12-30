@@ -1,3 +1,10 @@
+export default [
+  "Trust in the Lord with all your heart",
+  "A gentle answer turns away wrath",
+  "Plans succeed with good counsel"
+];
+
+
 [
   {
     "book": "Proverbs",
