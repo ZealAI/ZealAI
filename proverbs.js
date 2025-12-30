@@ -1,16 +1,10 @@
 export default [
-  "Trust in the Lord with all your heart",
-  "A gentle answer turns away wrath",
-  "Plans succeed with good counsel"
-];
 
-
-[
   {
     "book": "Proverbs",
     "chapter": 1,
     "verse": 1,
-    "text": ""
+    "text": "The proverbs of Solomon.."
   },
   {
     "book": "Proverbs",
@@ -11808,4 +11802,4 @@ export default [
     "verse": 31,
     "text": "Let her works praise her in the gates!"
   }
-]
+];
