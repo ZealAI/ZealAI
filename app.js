@@ -97,43 +97,32 @@ function renderChatList() {
 }
 
 // ---------- Render Messages ----------
-//function renderMessages() {
-//  responseBox.innerHTML = "";
-// 
-
-//  if (!chat || chat.messages.length === 0) {
- //   empty.style.display = "flex";
-//    return;
-  //}
-  
- //empty.style.display = "none";
-  
-  //chat.messages.forEach(msg => {
-    //const div = document.createElement("div");
-   // div.className = `message ${msg.role === "user" ? "user" : "assistant"}`;
-    //div.textContent = msg.content;
-    //responseBox.appendChild(div);
-  //});
-
-  //responseBox.scrollTop = responseBox.scrollHeight;
-//}
 function renderMessages() {
   responseBox.innerHTML = "";
-   const chat = getCurrentChat();
-   const empty = document.getElementById("emptyState");
-   const messages = chatSessions[currentSession];
+  const chat = getCurrentChat();
+  const empty = document.getElementById("emptyState");
 
-   chat messages.forEach(msg => {
+  if (!chat || chat.messages.length === 0) {
+    empty.style.display = "flex";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  chat.messages.forEach(msg => {
     const container = document.createElement("div");
-    container.className = `message ${msg.role}`;
+    container.className = `message ${msg.role === "user" ? "user" : "assistant"}`;
 
-    // 🔥 SPLIT RESPONSE INTO LINES
-    const lines = msg.content.split("\n").filter(line => line.trim() !== "");
+    // 🔥 FORCE STRUCTURED RENDERING
+    const lines = msg.content
+      .split("\n")
+      .map(l => l.trim())
+      .filter(l => l !== "");
 
     lines.forEach(line => {
       const p = document.createElement("p");
       p.textContent = line;
-      p.style.marginBottom = "10px"; // vertical spacing
+      p.style.marginBottom = "10px"; // spacing between bullets/points
       container.appendChild(p);
     });
 
@@ -142,6 +131,7 @@ function renderMessages() {
 
   responseBox.scrollTop = responseBox.scrollHeight;
 }
+
 
 
 
