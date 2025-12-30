@@ -1,4 +1,4 @@
-export default [
+const proverbs= [
 
   {
     "book": "Proverbs",
@@ -11803,3 +11803,4 @@ export default [
     "text": "Let her works praise her in the gates!"
   }
 ];
+export default proverbs;
