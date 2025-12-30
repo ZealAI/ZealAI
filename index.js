@@ -1,4 +1,4 @@
-import proverbs from "proverbs-clean.json";
+import proverbs from "./proverbs-clean.json";
 
 export default {
   async fetch(request, env) {
