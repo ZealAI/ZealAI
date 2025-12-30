@@ -11803,4 +11803,4 @@ const proverbs= [
     "text": "Let her works praise her in the gates!"
   }
 ];
-export default proverbs;
+
