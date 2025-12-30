@@ -1,13 +1,5 @@
 name = "zeal-ai"
-compatibility_date = "2024-12-19"
-[build]
-command = ""
-
-[build.upload]
-format = "modules"
 main = "index.js"
+compatibility_date = "2024-12-19"
 
-[[rules]]
-type = "Data"
-globs = ["**/*.json"]
 
