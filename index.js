@@ -9,9 +9,7 @@ export default {
           "Access-Control-Allow-Headers": "Content-Type",
         },
       });
-    }
-  }
-};
+    
 
 
     // Health check
@@ -113,5 +111,6 @@ Clarity over length. Peace over noise.
         }
       );
     }
-  
+  },
+}; 
 
