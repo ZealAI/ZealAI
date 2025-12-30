@@ -124,5 +124,5 @@ Clarity over length. Peace over noise.
         }
       );
     }
-  },
+  
 };
