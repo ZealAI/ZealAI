@@ -4,10 +4,13 @@ export default {
     // CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
+        status: 204,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
+           "Access-Control-Max-Age": "86400",
+           "Content-Type": "application/json",
         },
       });
     }
@@ -148,12 +151,16 @@ Clarity over length. Peace over noise.
 
       return new Response(
         JSON.stringify({
-          reply: data.choices?.[0]?.message?.content || "No reply",
+          reply: String(
+            data.choices?.[0]?.message?.content || "No reply"
+          ),
         }),
         {
+          status: 200,
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
+            "X-Content-Type-Options": "nosniff",
           },
         }
       );
