@@ -29,6 +29,35 @@ export default {
     try {
       const { messages } = await request.json();
 
+      // ---------- INPUT GUARDS ----------
+
+// Ensure messages is an array
+if (!Array.isArray(messages)) {
+  return new Response(
+    JSON.stringify({ error: "Invalid message format" }),
+    { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+  );
+}
+
+// Allow only user role
+const sanitizedMessages = messages
+  .filter(m => m && m.role === "user" && typeof m.content === "string")
+  .slice(-12);
+
+// Character limit (anti-spam)
+const totalChars = sanitizedMessages.reduce(
+  (sum, m) => sum + m.content.length,
+  0
+);
+
+if (totalChars > 4000) {
+  return new Response(
+    JSON.stringify({ error: "Message too long. Please shorten your input." }),
+    { status: 413, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+  );
+}
+
+
       if (!Array.isArray(messages)) {
         return new Response(
           JSON.stringify({ error: "messages must be an array" }),
@@ -127,7 +156,8 @@ Tone: gentle, wise,funny, non-judgmental.
 Clarity over length. Peace over noise.
                 `,
               },
-              ...messages.slice(-12)
+              ......sanitizedMessages
+
             ],
           }),
         }
@@ -165,18 +195,23 @@ Clarity over length. Peace over noise.
         }
       );
 
-    } catch (err) {
+      const reply =
+  typeof data.choices?.[0]?.message?.content === "string"
+    ? data.choices[0].message.content.slice(0, 2000)
+    : "I couldn’t generate a clear response. Please try again.";
+      
+    } 
       return new Response(
-        JSON.stringify({ error: err.message }),
+        JSON.stringify({ reply }),
         {
-          status: 500,
+          
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
           },
         }
       );
-    }
+    
   }
 };
 
