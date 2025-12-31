@@ -156,7 +156,7 @@ Tone: gentle, wise,funny, non-judgmental.
 Clarity over length. Peace over noise.
                 `,
               },
-              ......sanitizedMessages
+              ...sanitizedMessages
 
             ],
           }),
