@@ -1,7 +1,7 @@
 export default {
   async fetch(request, env) {
 
-    // CORS preflight
+    // ---------- CORS PREFLIGHT ----------
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
@@ -9,14 +9,12 @@ export default {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
-           "Access-Control-Max-Age": "86400",
-           "Content-Type": "application/json",
+          "Access-Control-Max-Age": "86400",
         },
       });
     }
-   
 
-    // Health check
+    // ---------- HEALTH CHECK ----------
     if (request.method !== "POST") {
       return new Response("ZEAL.AI Worker Running 🚀", {
         headers: {
@@ -27,40 +25,14 @@ export default {
     }
 
     try {
-      const { messages } = await request.json();
+      const body = await request.json();
+      const messages = body?.messages;
 
       // ---------- INPUT GUARDS ----------
 
-// Ensure messages is an array
-if (!Array.isArray(messages)) {
-  return new Response(
-    JSON.stringify({ error: "Invalid message format" }),
-    { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
-  );
-}
-
-// Allow only user role
-const sanitizedMessages = messages
-  .filter(m => m && m.role === "user" && typeof m.content === "string")
-  .slice(-12);
-
-// Character limit (anti-spam)
-const totalChars = sanitizedMessages.reduce(
-  (sum, m) => sum + m.content.length,
-  0
-);
-
-if (totalChars > 4000) {
-  return new Response(
-    JSON.stringify({ error: "Message too long. Please shorten your input." }),
-    { status: 413, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
-  );
-}
-
-
       if (!Array.isArray(messages)) {
         return new Response(
-          JSON.stringify({ error: "messages must be an array" }),
+          JSON.stringify({ error: "Invalid message format" }),
           {
             status: 400,
             headers: {
@@ -71,14 +43,45 @@ if (totalChars > 4000) {
         );
       }
 
-      const apiKey = env.MISTRAL_API_KEY;
+      // Only allow user messages
+      const sanitizedMessages = messages
+        .filter(
+          m =>
+            m &&
+            m.role === "user" &&
+            typeof m.content === "string"
+        )
+        .slice(-12);
+
+      // Character limit
+      const totalChars = sanitizedMessages.reduce(
+        (sum, m) => sum + m.content.length,
+        0
+      );
+
+      if (totalChars > 4000) {
+        return new Response(
+          JSON.stringify({
+            error: "Message too long. Please shorten your input.",
+          }),
+          {
+            status: 413,
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
+      }
+
+      // ---------- MISTRAL CALL ----------
 
       const mistralResponse = await fetch(
         "https://api.mistral.ai/v1/chat/completions",
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${apiKey}`,
+            Authorization: `Bearer ${env.MISTRAL_API_KEY}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -156,8 +159,7 @@ Tone: gentle, wise,funny, non-judgmental.
 Clarity over length. Peace over noise.
                 `,
               },
-              ...sanitizedMessages
-
+              ...sanitizedMessages,
             ],
           }),
         }
@@ -179,12 +181,15 @@ Clarity over length. Peace over noise.
 
       const data = await mistralResponse.json();
 
+      // ---------- OUTPUT GUARD ----------
+
+      const reply =
+        typeof data.choices?.[0]?.message?.content === "string"
+          ? data.choices[0].message.content.slice(0, 2000)
+          : "I couldn’t generate a clear response. Please try again.";
+
       return new Response(
-        JSON.stringify({
-          reply: String(
-            data.choices?.[0]?.message?.content || "No reply"
-          ),
-        }),
+        JSON.stringify({ reply }),
         {
           status: 200,
           headers: {
@@ -195,23 +200,17 @@ Clarity over length. Peace over noise.
         }
       );
 
-      const reply =
-  typeof data.choices?.[0]?.message?.content === "string"
-    ? data.choices[0].message.content.slice(0, 2000)
-    : "I couldn’t generate a clear response. Please try again.";
-      
-    } 
+    } catch (err) {
       return new Response(
-        JSON.stringify({ reply }),
+        JSON.stringify({ error: err.message }),
         {
-          
+          status: 500,
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
           },
         }
       );
-    
-  }
+    }
+  },
 };
-
