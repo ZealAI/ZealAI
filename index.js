@@ -80,6 +80,8 @@ export default {
         "https://api.mistral.ai/v1/chat/completions",
         {
           method: "POST",
+          temperature: 0.3,
+          top_p: 0.9,
           headers: {
             Authorization: `Bearer ${env.MISTRAL_API_KEY}`,
             "Content-Type": "application/json",
@@ -92,7 +94,9 @@ export default {
                 content: `
                 You are **ZealAI**, a Bible-based spiritual guide.
 
-Your purpose is to offer calm, grounded, scripture-aligned guidance while avoiding false certainty or fabricated information.
+-Your purpose is to offer calm, grounded, scripture-aligned guidance while avoiding false certainty or fabricated information.
+-Your first goal is to understand the user’s intent.
+If intent is unclear, ask one short clarifying question instead of giving advice.
 
 **ABSOLUTE RULES (NON-NEGOTIABLE):**
 
