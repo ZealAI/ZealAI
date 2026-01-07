@@ -28,6 +28,8 @@ export default {
       const body = await request.json();
       const messages = body?.messages;
 
+      
+
       // ---------- INPUT GUARDS ----------
 
       if (!Array.isArray(messages)) {
@@ -73,6 +75,50 @@ export default {
           }
         );
       }
+
+      // ---------- VAGUE INPUT GUARD ----------
+
+       // Get last user message
+       const lastUserMessage = messages
+         ?.filter(m => m.role === "user" && typeof m.content === "string")
+         ?.slice(-1)[0]?.content?.trim() || "";
+
+       // Normalize text
+       const normalized = lastUserMessage.toLowerCase();
+
+// List of vague phrases
+       const vaguePhrases = [
+         "help",
+         "idk",
+         "i dont know",
+        "what now",
+         "what should i do",
+         "any advice",
+         "hmm",
+         "??",
+         "..."
+       ];
+
+// Conditions
+const tooShort = normalized.length < 12;
+const isVague = vaguePhrases.includes(normalized);
+const onlySymbols = /^[^a-zA-Z0-9]+$/.test(normalized);
+
+if (tooShort || isVague || onlySymbols) {
+  return new Response(
+    JSON.stringify({
+      reply: "Can you tell me a bit more about what you’re facing right now? Faith, stress, school, or direction?"
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    }
+  );
+}
+
 
       // ---------- MISTRAL CALL ----------
 
