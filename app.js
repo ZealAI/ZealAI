@@ -98,7 +98,13 @@ function renderChatList() {
 
 // ---------- Render Messages ----------
 function renderMessages() {
-  responseBox.innerHTML = "";
+  responseBox.innerHTML +=  ' <div class="message assistant thinking">
+    Reflecting...
+    </div>' 
+  ;
+  const thinking = document.queryselector(".thinking");
+  if (thinking) thinking.remove();
+  
   const chat = getCurrentChat();
   const empty = document.getElementById("emptyState");
 
