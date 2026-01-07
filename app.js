@@ -6,7 +6,7 @@ const responseBox = document.getElementById("response");
 const newChatBtn = document.getElementById("newChat");
 const chatList = document.getElementById("chatList");
 const sidebar = document.querySelector(".sidebar");
-
+const toggleBtn = document.getElementById("toggleSidebar");
 
 // ---------- Load ----------
 let chatSessions = JSON.parse(localStorage.getItem(SAVED_CHATS_KEY)) || [];
@@ -65,7 +65,7 @@ function deleteChat(chatId) {
   renderMessages();
 }
 
-// ---------- Render Sidebar ----------
+// ---------- Sidebar ----------
 function renderChatList() {
   chatList.innerHTML = "";
 
@@ -84,8 +84,8 @@ function renderChatList() {
 
     const del = document.createElement("button");
     del.className = "chat-delete";
-    del.innerHTML = "🗑️";
-    del.onclick = (e) => {
+    del.textContent = "🗑️";
+    del.onclick = e => {
       e.stopPropagation();
       deleteChat(chat.id);
     };
@@ -96,15 +96,10 @@ function renderChatList() {
   });
 }
 
-// ---------- Render Messages ----------
+// ---------- Messages ----------
 function renderMessages() {
-  responseBox.innerHTML +=  ' <div class="message assistant thinking">
-    Reflecting...
-    </div>' 
-  ;
-  const thinking = document.queryselector(".thinking");
-  if (thinking) thinking.remove();
-  
+  responseBox.innerHTML = "";
+
   const chat = getCurrentChat();
   const empty = document.getElementById("emptyState");
 
@@ -119,16 +114,15 @@ function renderMessages() {
     const container = document.createElement("div");
     container.className = `message ${msg.role === "user" ? "user" : "assistant"}`;
 
-    // 🔥 FORCE STRUCTURED RENDERING
     const lines = msg.content
       .split("\n")
       .map(l => l.trim())
-      .filter(l => l !== "");
+      .filter(Boolean);
 
     lines.forEach(line => {
       const p = document.createElement("p");
       p.textContent = line;
-      p.style.marginBottom = "10px"; // spacing between bullets/points
+      p.style.marginBottom = "10px";
       container.appendChild(p);
     });
 
@@ -138,17 +132,29 @@ function renderMessages() {
   responseBox.scrollTop = responseBox.scrollHeight;
 }
 
+// ---------- Thinking ----------
+function showThinking() {
+  const div = document.createElement("div");
+  div.className = "message assistant thinking";
+  div.id = "thinking";
+  div.textContent = "Reflecting…";
+  responseBox.appendChild(div);
+  responseBox.scrollTop = responseBox.scrollHeight;
+}
 
+function removeThinking() {
+  const thinking = document.getElementById("thinking");
+  if (thinking) thinking.remove();
+}
 
-
-// ---------- Typing Effect ----------
+// ---------- Typing ----------
 function typeMessage(text, chat) {
   const div = document.createElement("div");
   div.className = "message assistant";
   responseBox.appendChild(div);
 
   let i = 0;
-  const speed = 18; // typing speed
+  const speed = 18;
 
   const interval = setInterval(() => {
     div.textContent += text[i];
@@ -182,6 +188,8 @@ sendBtn.onclick = async () => {
   renderMessages();
   input.value = "";
 
+  showThinking();
+
   try {
     const res = await fetch("https://zeal-ai.zeal-ai-app.workers.dev/", {
       method: "POST",
@@ -190,17 +198,18 @@ sendBtn.onclick = async () => {
     });
 
     const data = await res.json();
-    const reply = data.reply || "No reply.";
+    removeThinking();
 
+    const reply = data.reply || "No reply.";
     typeMessage(reply, chat);
 
   } catch {
+    removeThinking();
     typeMessage("⚠️ Error connecting to ZEAL.AI", chat);
   }
 };
 
-
-const toggleBtn = document.getElementById("toggleSidebar");
+// ---------- UI ----------
 toggleBtn.onclick = () => {
   sidebar.classList.toggle("hidden");
 };
