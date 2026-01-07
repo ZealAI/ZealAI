@@ -28,117 +28,66 @@ export default {
       const body = await request.json();
       const messages = body?.messages;
 
-      
-
       // ---------- INPUT GUARDS ----------
-
       if (!Array.isArray(messages)) {
         return new Response(
           JSON.stringify({ error: "Invalid message format" }),
-          {
-            status: 400,
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
+          { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
         );
       }
 
-      // Only allow user messages
+      // Sanitize messages
       const sanitizedMessages = messages
-        .filter(
-          m =>
-            m &&
-            m.role === "user" &&
-            typeof m.content === "string"
-        )
+        .filter(m => m && m.role === "user" && typeof m.content === "string")
         .slice(-12);
 
-      // Character limit
-      const totalChars = sanitizedMessages.reduce(
-        (sum, m) => sum + m.content.length,
-        0
-      );
-
+      const totalChars = sanitizedMessages.reduce((s, m) => s + m.content.length, 0);
       if (totalChars > 4000) {
         return new Response(
-          JSON.stringify({
-            error: "Message too long. Please shorten your input.",
-          }),
-          {
-            status: 413,
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
+          JSON.stringify({ error: "Message too long. Please shorten your input." }),
+          { status: 413, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
         );
       }
 
       // ---------- VAGUE INPUT GUARD ----------
+      const lastUserMessage = sanitizedMessages.at(-1)?.content?.trim() || "";
+      const normalized = lastUserMessage.toLowerCase();
 
-       // Get last user message
-       const lastUserMessage = messages
-         ?.filter(m => m.role === "user" && typeof m.content === "string")
-         ?.slice(-1)[0]?.content?.trim() || "";
+      const vaguePhrases = [
+        "help", "idk", "i dont know", "what now",
+        "what should i do", "any advice", "hmm", "??", "..."
+      ];
 
-       // Normalize text
-       const normalized = lastUserMessage.toLowerCase();
+      const tooShort = normalized.length < 12;
+      const isVague = vaguePhrases.includes(normalized);
+      const onlySymbols = /^[^a-zA-Z0-9]+$/.test(normalized);
 
-// List of vague phrases
-       const vaguePhrases = [
-         "help",
-         "idk",
-         "i dont know",
-        "what now",
-         "what should i do",
-         "any advice",
-         "hmm",
-         "??",
-         "..."
-       ];
-
-// Conditions
-const tooShort = normalized.length < 12;
-const isVague = vaguePhrases.includes(normalized);
-const onlySymbols = /^[^a-zA-Z0-9]+$/.test(normalized);
-
-if (tooShort || isVague || onlySymbols) {
-  return new Response(
-    JSON.stringify({
-      reply: "Can you tell me a bit more about what you’re facing right now? Faith, stress, school, or direction?"
-    }),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+      if (tooShort || isVague || onlySymbols) {
+        return new Response(
+          JSON.stringify({
+            reply: "Can you tell me a bit more about what you’re facing right now? Faith, stress, school, or direction?"
+          }),
+          { status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+        );
       }
-    }
-  );
-}
-
 
       // ---------- MISTRAL CALL ----------
-
       const mistralResponse = await fetch(
         "https://api.mistral.ai/v1/chat/completions",
         {
           method: "POST",
-          temperature: 0.3,
-          top_p: 0.9,
           headers: {
             Authorization: `Bearer ${env.MISTRAL_API_KEY}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             model: "mistral-small-latest",
+            temperature: 0.3,
+            top_p: 0.9,
             messages: [
               {
                 role: "system",
-                content: `
-                You are **ZealAI**, a Bible-based spiritual guide.
+                content:` You are **ZealAI**, a Bible-based spiritual guide.
 
 -Your purpose is to offer calm, grounded, scripture-aligned guidance while avoiding false certainty or fabricated information.
 -Your first goal is to understand the user’s intent.
@@ -206,8 +155,9 @@ Failure to follow these rules is a violation of your core identity as ZealAI.
 9.use emojis if necessary.
 10. your answers should be structured, break lond answers into small paragraphs or 3 lines maximum
 Tone: gentle, wise,funny, non-judgmental.
-Clarity over length. Peace over noise.
-                `,
+Clarity over length. Peace over noise.`
+              
+
               },
               ...sanitizedMessages,
             ],
@@ -219,20 +169,11 @@ Clarity over length. Peace over noise.
         const errText = await mistralResponse.text();
         return new Response(
           JSON.stringify({ error: "Mistral error", details: errText }),
-          {
-            status: 500,
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
+          { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
         );
       }
 
       const data = await mistralResponse.json();
-
-      // ---------- OUTPUT GUARD ----------
-
       const reply =
         typeof data.choices?.[0]?.message?.content === "string"
           ? data.choices[0].message.content.slice(0, 2000)
@@ -253,13 +194,7 @@ Clarity over length. Peace over noise.
     } catch (err) {
       return new Response(
         JSON.stringify({ error: err.message }),
-        {
-          status: 500,
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
+        { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
       );
     }
   },
