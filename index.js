@@ -1,110 +1,81 @@
 export default {
   async fetch(request, env) {
 
-    // ---------- CORS ----------
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         },
       });
     }
 
-    // ---------- HEALTH ----------
     if (request.method !== "POST") {
-      return new Response("ZEAL.AI Worker Running 🚀", {
+      return new Response("ZEAL.AI Running", {
         headers: { "Access-Control-Allow-Origin": "*" },
       });
     }
 
+    let body;
     try {
-      const { messages } = await request.json();
+      body = await request.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ reply: "Invalid request format." }),
+        { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+      );
+    }
 
-      if (!Array.isArray(messages)) {
-        return new Response(JSON.stringify({ error: "Invalid message format" }), {
-          status: 400,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-        });
-      }
+    const messages = Array.isArray(body.messages) ? body.messages : [];
 
-      // ---------- SANITIZE (KEEP CONTEXT) ----------
-      const sanitizedMessages = messages
-        .filter(
-          m =>
-            m &&
-            (m.role === "user" || m.role === "assistant") &&
-            typeof m.content === "string"
-        )
-        .slice(-16);
+    const sanitized = messages
+      .filter(m => m && typeof m.content === "string" && (m.role === "user" || m.role === "assistant"))
+      .slice(-12);
 
-      // ---------- LAST USER MESSAGE (IMPORTANT) ----------
-      const lastUserMessage = [...sanitizedMessages]
-        .reverse()
-        .find(m => m.role === "user");
+    const lastUser = [...sanitized].reverse().find(m => m.role === "user");
 
-      if (!lastUserMessage) {
-        return new Response(JSON.stringify({ reply: "Please send a message." }), {
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-        });
-      }
+    if (!lastUser) {
+      return new Response(
+        JSON.stringify({ reply: "Say something and I’ll respond 🙂" }),
+        { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+      );
+    }
 
-      const text = lastUserMessage.content.trim();
-      const normalized = text.toLowerCase();
+    const text = lastUser.content.trim().toLowerCase();
 
-      // ---------- GRATITUDE / CLOSING ----------
-      const gratitude = ["thanks", "thank you", "ok", "okay", "amen", "cool", "got it"];
-      if (gratitude.includes(normalized)) {
-        sanitizedMessages.push({
-          role: "assistant",
-          content: "Respond briefly, kindly, and warmly to the user’s message."
-        });
-      }
+    // Allow short replies
+    const closings = ["thanks", "thank you", "ok", "okay", "amen", "cool"];
+    if (closings.includes(text)) {
+      sanitized.push({
+        role: "assistant",
+        content: "Respond briefly and kindly."
+      });
+    }
 
-      // ---------- TRUE VAGUE INPUT GUARD ----------
-      const vaguePhrases = ["idk", "i dont know", "what now", "any advice", "hmm", "??", "..."];
-      const onlySymbols = /^[^a-zA-Z0-9]+$/.test(normalized);
+    // Real vague guard
+    const vague = ["idk", "i dont know", "what now", "hmm"];
+    if (vague.includes(text) && text.length < 20) {
+      return new Response(
+        JSON.stringify({ reply: "Can you tell me a little more?" }),
+        { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+      );
+    }
 
-      if ((vaguePhrases.includes(normalized) || onlySymbols) && text.length < 20) {
-        return new Response(
-          JSON.stringify({
-            reply: "Can you share a little more about what you’re facing right now?"
-          }),
-          { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
-        );
-      }
-
-      // ---------- SIZE LIMIT ----------
-      const totalChars = sanitizedMessages.reduce((s, m) => s + m.content.length, 0);
-      if (totalChars > 4000) {
-        return new Response(JSON.stringify({ error: "Message too long." }), {
-          status: 413,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-        });
-      }
-
-      // ---------- MISTRAL ----------
-      const mistralResponse = await fetch(
-        "https://api.mistral.ai/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${env.MISTRAL_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "mistral-small-latest",
-            temperature: 0.3,
-            top_p: 0.9,
-            messages: [
-              {
-                role: "system",
-                content: 
-
-
-` You are **ZealAI**, a Bible-based spiritual guide.
+    const mistral = await fetch("https://api.mistral.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.MISTRAL_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "mistral-small-latest",
+        temperature: 0.3,
+        messages: [
+          {
+            role: "system",
+            content: ` You are **ZealAI**, a Bible-based spiritual guide.
 
 -Your purpose is to offer calm, grounded, scripture-aligned guidance while avoiding false certainty or fabricated information.
 -Your first goal is to understand the user’s intent.
@@ -173,33 +144,25 @@ Failure to follow these rules is a violation of your core identity as ZealAI.
 10. your answers should be structured, break lond answers into small paragraphs or 3 lines maximum
 Tone: gentle, wise,funny, non-judgmental.
 Clarity over length. Peace over noise.`
-              },
-              ...sanitizedMessages,
-            ],
-          }),
-        }
+          },
+          ...sanitized,
+        ],
+      }),
+    });
+
+    if (!mistral.ok) {
+      return new Response(
+        JSON.stringify({ reply: "AI service unavailable. Try again." }),
+        { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
       );
-
-      if (!mistralResponse.ok) {
-        const err = await mistralResponse.text();
-        return new Response(JSON.stringify({ error: err }), {
-          status: 500,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-        });
-      }
-
-      const data = await mistralResponse.json();
-      const reply = data.choices?.[0]?.message?.content || "Please try again.";
-
-      return new Response(JSON.stringify({ reply }), {
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-      });
-
-    } catch (err) {
-      return new Response(JSON.stringify({ error: err.message }), {
-        status: 500,
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-      });
     }
+
+    const data = await mistral.json();
+    const reply = data?.choices?.[0]?.message?.content || "No response.";
+
+    return new Response(
+      JSON.stringify({ reply }),
+      { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+    );
   },
 };
