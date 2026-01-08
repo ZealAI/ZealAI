@@ -37,9 +37,14 @@ export default {
       }
 
       // Sanitize messages
-      const sanitizedMessages = messages
-        .filter(m => m && m.role === "user" && typeof m.content === "string")
-        .slice(-12);
+     const sanitizedMessages = messages
+  .filter(m =>
+    m &&
+    (m.role === "user" || m.role === "assistant") &&
+    typeof m.content === "string"
+  )
+  .slice(-16);
+
 
       const totalChars = sanitizedMessages.reduce((s, m) => s + m.content.length, 0);
       if (totalChars > 4000) {
@@ -70,6 +75,14 @@ export default {
           { status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
         );
       }
+
+      if (sanitizedMessages.length === 1 && sanitizedMessages[0].content.length < 5) {
+  sanitizedMessages.unshift({
+    role: "assistant",
+    content: "The user is closing or expressing gratitude. Respond briefly and kindly."
+  });
+}
+
 
       // ---------- MISTRAL CALL ----------
       const mistralResponse = await fetch(
