@@ -26,6 +26,7 @@ body {
   gap: 12px;
   transition: transform 0.3s ease;
   position: relative;
+  overflow-y:scroll;
   z-index: 20;
 }
 
@@ -47,7 +48,7 @@ body {
   padding: 10px 12px;
   font-size: 20px;
   cursor: pointer;
-  overflow-y:scroll;
+  
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
